@@ -3,6 +3,11 @@ import cors from 'cors';
 import 'dotenv/config';
 import { connectDB } from './config/db.js';
 import userRouter from './routes/userRoute.js';
+import workspaceRouter from './routes/workspaceRoute.js';
+import taskRouter from './routes/taskRoute.js';
+import passport from 'passport';
+import authRouter from './routes/authRoute.js';
+import { swaggerUi, swaggerSpec } from './config/swagger.js';
 
 // Khởi tạo ứng dụng Express
 const app = express();
@@ -17,7 +22,15 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 
 // Routes
-app.use('/api/user', userRouter);
+app.use(passport.initialize());
+app.use('/user', userRouter);
+app.use('/workspace', workspaceRouter);
+app.use("/auth", authRouter);
+
+app.use('/task', taskRouter);
+
+// Swagger API documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get('/', (req, res) => {
     res.send('Hello World!');

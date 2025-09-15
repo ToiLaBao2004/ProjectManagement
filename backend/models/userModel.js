@@ -7,6 +7,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Kiểm tra nếu model đã tồn tại để tránh lỗi OverwriteModelError
-const userModel = mongoose.model.User || mongoose.model('User', userSchema);
+const userModel = mongoose.models.User || mongoose.model('User', userSchema);
 
 export default userModel;

@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import sprintSchema from "./sprintModel";
+import sprintSchema from "./sprintModel.js";
 
 const projectSchema = new mongoose.Schema({
+    workspace: { type: mongoose.Schema.Types.ObjectId, ref: 'Workspace', required: true },
     name: { type: String, required: true },
-    key: { type: String, required: true, unique: true, uppercase: true},
     description: { type: String },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     members: [{
@@ -11,9 +11,8 @@ const projectSchema = new mongoose.Schema({
         role: { type: String, enum: ["manager", "developer", "tester"], default: 'developer' },
         joinedAt: { type: Date, default: Date.now }
     }],
-    sprint: [sprintSchema],
-    createdAt: { type: Date, default: Date.now },
-});
+    sprints: [sprintSchema],
+}, { timestamps: true });
 
 // Kiểm tra nếu model đã tồn tại để tránh lỗi OverwriteModelError
 const ProjectModel = mongoose.model.Project || mongoose.model('Project', projectSchema);

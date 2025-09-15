@@ -5,7 +5,6 @@ import { authMiddleware } from '../middleware/auth.js';
 const userRouter = express.Router();
 
 // PUBLIC LINK
-
 userRouter.post('/register', registerUser);
 userRouter.post('/login', loginUser);
 
