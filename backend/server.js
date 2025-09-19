@@ -7,7 +7,8 @@ import workspaceRouter from './routes/workspaceRoute.js';
 import taskRouter from './routes/taskRoute.js';
 import passport from 'passport';
 import authRouter from './routes/authRoute.js';
-import { swaggerUi, swaggerSpec } from './config/swagger.js';
+import notificationRouter from './routes/notificationRoute.js';
+import "./services/notificationService.js";
 
 // Khởi tạo ứng dụng Express
 const app = express();
@@ -28,9 +29,7 @@ app.use('/workspace', workspaceRouter);
 app.use("/auth", authRouter);
 
 app.use('/task', taskRouter);
-
-// Swagger API documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/notification', notificationRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello World!');

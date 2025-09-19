@@ -1,0 +1,1627 @@
+{
+  "modelName": "New Model",
+  "collections": [
+    {
+      "collectionName": "Users",
+      "type": "object",
+      "properties": [
+        {
+          "name": "_id",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {
+            "name": false,
+            "code": false
+          },
+          "GUID": "b3c0fe9d-955a-425c-874a-734cd5e6c3fb",
+          "childRelationships": [
+            "cf758ad3-41cc-4e46-8564-5b4b05bb7071",
+            "2422498c-eb6d-4892-ac64-c5505b1ddec3",
+            "99683da7-9de5-4dce-8044-c408751f0eb2",
+            "ae1e3727-f09e-4d98-8b8b-b01605c60e3a",
+            "f7932fca-aff2-4b0f-80d0-e73d77bc4e38",
+            "0177e2fb-01f9-435c-a64c-d124dbd6d8f5",
+            "407475a7-dbd9-473c-a56a-669d290afa57"
+          ]
+        },
+        {
+          "name": "name",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "e6ea3b53-9e96-4baf-a1b3-b03cbb274e15",
+          "error": {
+            "name": false,
+            "code": false
+          }
+        },
+        {
+          "name": "email",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "81600e3f-0a23-4633-b0a3-e455c762b417",
+          "error": {
+            "name": false,
+            "code": false
+          }
+        },
+        {
+          "name": "password",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "96222953-5bab-4fde-8320-2b40d9c1ed69",
+          "error": {
+            "name": false,
+            "code": false
+          }
+        }
+      ],
+      "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "edec124a-017b-4b4b-8f83-7ffb587a5d60"
+      },
+      "isActivated": true,
+      "additionalProperties": false,
+      "validationLevel": "Off",
+      "validationAction": "Warn",
+      "storageEngineName": "WiredTiger",
+      "collectionUsers": [],
+      "indexes": [],
+      "collation": {},
+      "sharding": {
+        "unique": true,
+        "collation": "null"
+      },
+      "GUID": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      }
+    },
+    {
+      "collectionName": "Workspaces",
+      "type": "object",
+      "properties": [
+        {
+          "name": "_id",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {
+            "name": false,
+            "code": false
+          },
+          "GUID": "49b9aba5-6513-40d9-89c6-ea86d86e67c5",
+          "childRelationships": [
+            "8d32ef31-4277-454d-9f45-9a6f9d112baa"
+          ]
+        },
+        {
+          "name": "name",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "23a0d37c-e1f7-4367-b81a-b224deba46eb",
+          "error": {
+            "name": false,
+            "code": false
+          }
+        },
+        {
+          "name": "description",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "49354889-4c31-4a48-9eba-3712d9f1ac66",
+          "error": {
+            "name": false,
+            "code": false
+          }
+        },
+        {
+          "name": "owner",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {
+            "name": false,
+            "code": false
+          },
+          "GUID": "7042b0ac-e0de-4d01-9228-7bbac9fd0257",
+          "parentRelationship": "cf758ad3-41cc-4e46-8564-5b4b05bb7071",
+          "relationshipType": "Foreign Key"
+        },
+        {
+          "name": "members",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "document",
+          "properties": [
+            {
+              "name": "user",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "objectId",
+              "GUID": "a7ce0f14-a287-4475-86c8-e9f67ddcc5e5",
+              "error": {},
+              "relationshipType": "Foreign Key",
+              "foreignCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+              "foreignField": [
+                "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+                "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+              ],
+              "parentRelationship": "2422498c-eb6d-4892-ac64-c5505b1ddec3"
+            },
+            {
+              "name": "role",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "string",
+              "GUID": "fa73a1b7-9fba-4e86-be0e-96f534a6cbaf",
+              "error": {}
+            },
+            {
+              "name": "joinedAt",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "date",
+              "primaryKey": false,
+              "error": {},
+              "GUID": "6772e4f9-6db0-4cf2-8772-c0670fc99b14"
+            }
+          ],
+          "additionalProperties": false,
+          "error": {},
+          "GUID": "6775fc81-170c-4113-8ac5-5793a4dfe53a"
+        },
+        {
+          "name": "createdAt",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {
+            "name": false,
+            "code": false
+          },
+          "GUID": "5a43fba7-3f67-4c1b-92a7-fa975f2492ff"
+        },
+        {
+          "name": "updatedAt",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {
+            "name": false,
+            "code": false
+          },
+          "GUID": "5dd818c9-360f-4ac6-b399-98254e98a46e"
+        }
+      ],
+      "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "978c0289-1b30-4b89-81d9-9567078d3c75"
+      },
+      "isActivated": true,
+      "additionalProperties": false,
+      "validationLevel": "Off",
+      "validationAction": "Warn",
+      "storageEngineName": "WiredTiger",
+      "collectionUsers": [],
+      "indexes": [],
+      "collation": {},
+      "sharding": {
+        "unique": true,
+        "collation": "null"
+      },
+      "GUID": "07d474d0-45c3-4e06-a196-2aa5e069d192",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      }
+    },
+    {
+      "collectionName": "Projects",
+      "type": "object",
+      "properties": [
+        {
+          "name": "_id",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {
+            "name": false,
+            "code": false
+          },
+          "GUID": "1e3e9897-067f-4201-8873-b4aee4eb99a7",
+          "childRelationships": [
+            "431abc31-45c6-4a42-9b5f-f776ee78c4d4"
+          ]
+        },
+        {
+          "name": "workspace",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {},
+          "GUID": "edf38f97-4949-4cdc-87cb-505e339ae172",
+          "relationshipType": "Foreign Key",
+          "foreignCollection": "07d474d0-45c3-4e06-a196-2aa5e069d192",
+          "foreignField": [
+            "07d474d0-45c3-4e06-a196-2aa5e069d192",
+            "49b9aba5-6513-40d9-89c6-ea86d86e67c5"
+          ],
+          "parentRelationship": "8d32ef31-4277-454d-9f45-9a6f9d112baa"
+        },
+        {
+          "name": "name",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "8d8569a1-957a-40c7-9198-aa09a0d99adf",
+          "error": {
+            "name": false,
+            "code": false
+          }
+        },
+        {
+          "name": "description",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "b5dab9de-5955-4a0e-96a5-1dab410ae618",
+          "error": {}
+        },
+        {
+          "name": "owner",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {},
+          "GUID": "c02a8b9d-2d80-4a14-9263-bf69c9f06a16",
+          "relationshipType": "Foreign Key",
+          "foreignCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "foreignField": [
+            "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+            "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+          ],
+          "parentRelationship": "99683da7-9de5-4dce-8044-c408751f0eb2"
+        },
+        {
+          "name": "members",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "document",
+          "properties": [
+            {
+              "name": "user",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "objectId",
+              "error": {},
+              "GUID": "e123b2b5-4e46-4aa3-be21-eb444fcc32e1",
+              "relationshipType": "Foreign Key",
+              "foreignCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+              "foreignField": [
+                "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+                "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+              ],
+              "parentRelationship": "ae1e3727-f09e-4d98-8b8b-b01605c60e3a"
+            },
+            {
+              "name": "role",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "string",
+              "GUID": "4b49fc9f-2086-4963-90e1-8571ab4c90db",
+              "error": {}
+            },
+            {
+              "name": "joinedAt",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "date",
+              "primaryKey": false,
+              "error": {},
+              "GUID": "04768558-55c2-4046-9a6e-483e0e8a18d6"
+            }
+          ],
+          "additionalProperties": false,
+          "error": {},
+          "GUID": "78b5cc4c-ab1f-4b5b-b5d2-4e7410c3f43f"
+        },
+        {
+          "name": "sprints",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "document",
+          "properties": [
+            {
+              "name": "name",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "string",
+              "GUID": "d6fd0ad4-8c8c-4d1d-b96b-1483db1884d6",
+              "error": {}
+            }
+          ],
+          "additionalProperties": false,
+          "error": {},
+          "GUID": "d196ecf4-1e8f-49ea-8e7e-0429c51a4ba7"
+        },
+        {
+          "name": "createdAt",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {},
+          "GUID": "6cd56c35-714c-42ef-a0c4-3eca26b6e98e"
+        },
+        {
+          "name": "updatedAt",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {},
+          "GUID": "b71c9611-be91-4165-b520-28ac5f71c01a"
+        }
+      ],
+      "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "2ec28a12-f1d4-4537-882b-ee4a58374f9b"
+      },
+      "isActivated": true,
+      "additionalProperties": false,
+      "validationLevel": "Off",
+      "validationAction": "Warn",
+      "storageEngineName": "WiredTiger",
+      "collectionUsers": [],
+      "indexes": [],
+      "collation": {},
+      "sharding": {
+        "unique": true,
+        "collation": "null"
+      },
+      "GUID": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      }
+    },
+    {
+      "collectionName": "Tasks",
+      "type": "object",
+      "properties": [
+        {
+          "name": "_id",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {
+            "name": false,
+            "code": false
+          },
+          "GUID": "86587d99-8287-47a4-b4e5-ac664d5b18b5"
+        },
+        {
+          "name": "project",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {
+            "name": false,
+            "code": false
+          },
+          "GUID": "ba3c2452-1c17-485f-a5fb-29af24cdc0a6",
+          "relationshipType": "Foreign Key",
+          "foreignCollection": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+          "foreignField": [
+            "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+            "1e3e9897-067f-4201-8873-b4aee4eb99a7"
+          ],
+          "parentRelationship": "431abc31-45c6-4a42-9b5f-f776ee78c4d4"
+        },
+        {
+          "name": "title",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "34059d95-22c8-491b-827d-574264bf6de6",
+          "error": {
+            "name": false,
+            "code": false
+          }
+        },
+        {
+          "name": "priority",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "ef2907ab-4243-4d9e-b373-0494803075cd",
+          "error": {}
+        },
+        {
+          "name": "status",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "980a79a9-de6c-41db-af0c-4a3972eb4a45",
+          "error": {}
+        },
+        {
+          "name": "dueDate",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {},
+          "GUID": "651f47f4-5cf7-4df7-ad82-5345c8a090e8"
+        },
+        {
+          "name": "owner",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {},
+          "GUID": "4ab95635-9107-444d-b0b7-6f5e11dffdf8",
+          "relationshipType": "Foreign Key",
+          "foreignCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "foreignField": [
+            "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+            "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+          ],
+          "parentRelationship": "f7932fca-aff2-4b0f-80d0-e73d77bc4e38"
+        },
+        {
+          "name": "assigner",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {},
+          "GUID": "b1326029-0db8-4b56-ba4e-48ae90b336d7",
+          "relationshipType": "Foreign Key",
+          "foreignCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "foreignField": [
+            "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+            "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+          ],
+          "parentRelationship": "0177e2fb-01f9-435c-a64c-d124dbd6d8f5"
+        },
+        {
+          "name": "complete",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "boolean",
+          "error": {},
+          "GUID": "3fabf553-c890-4851-962b-9fca999856b4"
+        },
+        {
+          "name": "comments",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "document",
+          "properties": [
+            {
+              "name": "user",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "objectId",
+              "error": {},
+              "GUID": "5fc3ddd1-93bf-4570-824f-c69a32a171b6"
+            },
+            {
+              "name": "content",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "string",
+              "GUID": "4e58ad8c-2f6b-40cc-9d93-fcb407d90423",
+              "error": {}
+            },
+            {
+              "name": "createdAt",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "date",
+              "primaryKey": false,
+              "error": {},
+              "GUID": "278f1037-c6bf-4b8a-aeee-28142266e8b0"
+            }
+          ],
+          "additionalProperties": false,
+          "error": {},
+          "GUID": "c67c0610-1342-43e6-9646-7d334cba736c"
+        },
+        {
+          "name": "history",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "document",
+          "properties": [
+            {
+              "name": "field",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "string",
+              "GUID": "8adf17b9-56a0-4b52-8407-006a222f3d25",
+              "error": {}
+            },
+            {
+              "name": "oldValue",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "string",
+              "GUID": "880fac59-487b-447b-9456-6fb7cecd8318",
+              "error": {}
+            },
+            {
+              "name": "newValue",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "string",
+              "GUID": "ddd2667f-e249-447c-b983-86187d1f8742",
+              "error": {}
+            },
+            {
+              "name": "updatedBy",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "objectId",
+              "error": {},
+              "GUID": "fcd5b509-18cf-4136-94c9-5ed74c0d610b",
+              "relationshipType": "Foreign Key",
+              "foreignCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+              "foreignField": [
+                "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+                "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+              ],
+              "parentRelationship": "407475a7-dbd9-473c-a56a-669d290afa57"
+            },
+            {
+              "name": "updatedAt",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "date",
+              "primaryKey": false,
+              "error": {},
+              "GUID": "f9af86c2-09b9-409f-923e-f1cd4d882451"
+            }
+          ],
+          "additionalProperties": false,
+          "error": {},
+          "GUID": "fd463b1c-a84a-4557-8208-529542639392"
+        },
+        {
+          "name": "createdAt",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {},
+          "GUID": "aecd20ec-988b-43e7-9b33-dc79c47a6716"
+        },
+        {
+          "name": "updatedAt",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {},
+          "GUID": "4bb92f88-4266-45c3-8cbd-c77f6c33396c"
+        }
+      ],
+      "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "befe3db7-9262-4658-a01a-901ed3407f4e"
+      },
+      "isActivated": true,
+      "additionalProperties": false,
+      "validationLevel": "Off",
+      "validationAction": "Warn",
+      "storageEngineName": "WiredTiger",
+      "collectionUsers": [],
+      "indexes": [],
+      "collation": {},
+      "sharding": {
+        "unique": true,
+        "collation": "null"
+      },
+      "GUID": "52c8e696-a574-43a7-ae21-3a004659f598",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      }
+    }
+  ],
+  "buckets": [],
+  "views": [],
+  "relationships": [
+    {
+      "name": "fk_Users._id_to_Workspace.owner",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "07d474d0-45c3-4e06-a196-2aa5e069d192",
+          "7042b0ac-e0de-4d01-9228-7bbac9fd0257"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "childCollection": "07d474d0-45c3-4e06-a196-2aa5e069d192",
+      "GUID": "cf758ad3-41cc-4e46-8564-5b4b05bb7071",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "e0c58b0d-7329-4359-9ef0-be8188b1e361",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 1081.7333333333333,
+            "y": 934.5999999999983
+          },
+          {
+            "x": 1081.7333333333333,
+            "y": 892.4666666666658
+          },
+          {
+            "x": 1081.6666666666665,
+            "y": 892.4666666666658
+          },
+          {
+            "x": 1081.6666666666665,
+            "y": 850.3333333333331
+          }
+        ],
+        "sides": [
+          "top",
+          "bottom"
+        ]
+      }
+    },
+    {
+      "name": "fk_Users._id_to_Workspaces.members.user",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "07d474d0-45c3-4e06-a196-2aa5e069d192",
+          "6775fc81-170c-4113-8ac5-5793a4dfe53a",
+          "a7ce0f14-a287-4475-86c8-e9f67ddcc5e5"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "childCollection": "07d474d0-45c3-4e06-a196-2aa5e069d192",
+      "GUID": "2422498c-eb6d-4892-ac64-c5505b1ddec3",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "a81739fd-8db2-41d4-9983-56d68ccc1efc",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 987.0666666666666,
+            "y": 934.5999999999983
+          },
+          {
+            "x": 987.0666666666666,
+            "y": 892.4666666666658
+          },
+          {
+            "x": 1011.9999999999999,
+            "y": 892.4666666666658
+          },
+          {
+            "x": 1011.9999999999999,
+            "y": 850.3333333333331
+          }
+        ],
+        "sides": [
+          "top",
+          "bottom"
+        ]
+      }
+    },
+    {
+      "name": "fk_Workspaces._id_to_Projects.workspace",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "07d474d0-45c3-4e06-a196-2aa5e069d192",
+          "49b9aba5-6513-40d9-89c6-ea86d86e67c5"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+          "edf38f97-4949-4cdc-87cb-505e339ae172"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "07d474d0-45c3-4e06-a196-2aa5e069d192",
+      "childCollection": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+      "GUID": "8d32ef31-4277-454d-9f45-9a6f9d112baa",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "90ccf538-e59c-4131-9d97-a5ecae278387",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 1353.3333333333312,
+            "y": 875.4666829427063
+          },
+          {
+            "x": 1264.8666666666657,
+            "y": 875.4666829427063
+          },
+          {
+            "x": 1264.8666666666657,
+            "y": 1042.5999999999983
+          },
+          {
+            "x": 1176.4,
+            "y": 1042.5999999999983
+          }
+        ],
+        "sides": [
+          "left",
+          "right"
+        ]
+      }
+    },
+    {
+      "name": "fk_Users._id_to_Projects.owner",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+          "c02a8b9d-2d80-4a14-9263-bf69c9f06a16"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "childCollection": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+      "GUID": "99683da7-9de5-4dce-8044-c408751f0eb2",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "46ea5d5d-8149-48e8-a947-7de6f42e4653",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 1353.3333333333312,
+            "y": 765.8666829427062
+          },
+          {
+            "x": 1252.3333333333321,
+            "y": 765.8666829427062
+          },
+          {
+            "x": 1252.3333333333321,
+            "y": 766.3333333333331
+          },
+          {
+            "x": 1151.3333333333333,
+            "y": 766.3333333333331
+          }
+        ],
+        "sides": [
+          "left",
+          "right"
+        ]
+      }
+    },
+    {
+      "name": "fk_Users._id_to_Projects.members.user",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+          "78b5cc4c-ab1f-4b5b-b5d2-4e7410c3f43f",
+          "e123b2b5-4e46-4aa3-be21-eb444fcc32e1"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "childCollection": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+      "GUID": "ae1e3727-f09e-4d98-8b8b-b01605c60e3a",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "f38d6c74-7078-4ecb-9d0a-7593fe47f975",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 1353.3333333333312,
+            "y": 820.6666829427062
+          },
+          {
+            "x": 1252.3333333333321,
+            "y": 820.6666829427062
+          },
+          {
+            "x": 1252.3333333333321,
+            "y": 808.3333333333331
+          },
+          {
+            "x": 1151.3333333333333,
+            "y": 808.3333333333331
+          }
+        ],
+        "sides": [
+          "left",
+          "right"
+        ]
+      }
+    },
+    {
+      "name": "fk_Projects._id_to_Tasks.project",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+          "1e3e9897-067f-4201-8873-b4aee4eb99a7"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "52c8e696-a574-43a7-ae21-3a004659f598",
+          "ba3c2452-1c17-485f-a5fb-29af24cdc0a6"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+      "childCollection": "52c8e696-a574-43a7-ae21-3a004659f598",
+      "GUID": "431abc31-45c6-4a42-9b5f-f776ee78c4d4",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "2d825c80-0ec7-421d-a355-df338e1b31c4",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 1242.9999999999995,
+            "y": 387.66666666666765
+          },
+          {
+            "x": 1298.1666666666654,
+            "y": 387.66666666666765
+          },
+          {
+            "x": 1298.1666666666654,
+            "y": 711.0666829427062
+          },
+          {
+            "x": 1353.3333333333312,
+            "y": 711.0666829427062
+          }
+        ],
+        "sides": [
+          "right",
+          "left"
+        ]
+      }
+    },
+    {
+      "name": "fk_Users._id_to_Tasks.owner",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "52c8e696-a574-43a7-ae21-3a004659f598",
+          "4ab95635-9107-444d-b0b7-6f5e11dffdf8"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "childCollection": "52c8e696-a574-43a7-ae21-3a004659f598",
+      "GUID": "f7932fca-aff2-4b0f-80d0-e73d77bc4e38",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "2d3193d3-fbc6-4aa8-be9a-595ad06cff78",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 1165.2499999999995,
+            "y": 596.6666666666677
+          },
+          {
+            "x": 1165.2499999999995,
+            "y": 660.5000000000005
+          },
+          {
+            "x": 1099.0833333333333,
+            "y": 660.5000000000005
+          },
+          {
+            "x": 1099.0833333333333,
+            "y": 724.3333333333331
+          }
+        ],
+        "sides": [
+          "bottom",
+          "top"
+        ]
+      }
+    },
+    {
+      "name": "fk_Users._id_to_Tasks.assigner",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "52c8e696-a574-43a7-ae21-3a004659f598",
+          "b1326029-0db8-4b56-ba4e-48ae90b336d7"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "childCollection": "52c8e696-a574-43a7-ae21-3a004659f598",
+      "GUID": "0177e2fb-01f9-435c-a64c-d124dbd6d8f5",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "fadc7c38-ff2e-4dc1-87ef-829a08620236",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 1009.7499999999994,
+            "y": 596.6666666666677
+          },
+          {
+            "x": 1009.7499999999994,
+            "y": 660.5000000000005
+          },
+          {
+            "x": 994.5833333333333,
+            "y": 660.5000000000005
+          },
+          {
+            "x": 994.5833333333333,
+            "y": 724.3333333333331
+          }
+        ],
+        "sides": [
+          "bottom",
+          "top"
+        ]
+      }
+    },
+    {
+      "name": "fk_Users._id_to_Tasks.history.updatedBy",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "52c8e696-a574-43a7-ae21-3a004659f598",
+          "fd463b1c-a84a-4557-8208-529542639392",
+          "fcd5b509-18cf-4136-94c9-5ed74c0d610b"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "childCollection": "52c8e696-a574-43a7-ae21-3a004659f598",
+      "GUID": "407475a7-dbd9-473c-a56a-669d290afa57",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "4fc9e793-f2b2-43c6-a3bb-f75e6f7ad0aa",
+        "autoPositioning": true,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 1087.4999999999995,
+            "y": 596.6666666666677
+          },
+          {
+            "x": 1087.4999999999995,
+            "y": 660.5000000000005
+          },
+          {
+            "x": 1046.8333333333333,
+            "y": 660.5000000000005
+          },
+          {
+            "x": 1046.8333333333333,
+            "y": 724.3333333333331
+          }
+        ],
+        "sides": [
+          "bottom",
+          "top"
+        ]
+      }
+    }
+  ],
+  "users": [],
+  "diagramViews": [
+    {
+      "GUID": "75c8d4cf-85d3-4c61-ada9-39f1c1633961",
+      "name": "cc",
+      "buckets": [],
+      "comments": "",
+      "description": "",
+      "entities": [
+        "Databases",
+        "no-bucket",
+        "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+        "07d474d0-45c3-4e06-a196-2aa5e069d192",
+        "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+        "52c8e696-a574-43a7-ae21-3a004659f598"
+      ]
+    }
+  ],
+  "idToNameHashTable": {
+    "e0d741a8-d946-446b-887c-330a5f6c8c4e": "Users",
+    "e6ea3b53-9e96-4baf-a1b3-b03cbb274e15": "name",
+    "81600e3f-0a23-4633-b0a3-e455c762b417": "email",
+    "96222953-5bab-4fde-8320-2b40d9c1ed69": "password",
+    "07d474d0-45c3-4e06-a196-2aa5e069d192": "Workspaces",
+    "23a0d37c-e1f7-4367-b81a-b224deba46eb": "name",
+    "49354889-4c31-4a48-9eba-3712d9f1ac66": "description",
+    "7042b0ac-e0de-4d01-9228-7bbac9fd0257": "owner",
+    "b3c0fe9d-955a-425c-874a-734cd5e6c3fb": "_id",
+    "49b9aba5-6513-40d9-89c6-ea86d86e67c5": "_id",
+    "cf758ad3-41cc-4e46-8564-5b4b05bb7071": "fk_Users._id_to_Workspace.owner",
+    "6775fc81-170c-4113-8ac5-5793a4dfe53a": "members",
+    "5a43fba7-3f67-4c1b-92a7-fa975f2492ff": "createdAt",
+    "5dd818c9-360f-4ac6-b399-98254e98a46e": "updatedAt",
+    "6df9155a-d808-4af1-abb4-590ce2d6ff22": "Projects",
+    "1e3e9897-067f-4201-8873-b4aee4eb99a7": "_id",
+    "edf38f97-4949-4cdc-87cb-505e339ae172": "workspace",
+    "8d8569a1-957a-40c7-9198-aa09a0d99adf": "name",
+    "a7ce0f14-a287-4475-86c8-e9f67ddcc5e5": "user",
+    "fa73a1b7-9fba-4e86-be0e-96f534a6cbaf": "role",
+    "6772e4f9-6db0-4cf2-8772-c0670fc99b14": "joinedAt",
+    "2422498c-eb6d-4892-ac64-c5505b1ddec3": "fk_Users._id_to_Workspaces.members.user",
+    "8d32ef31-4277-454d-9f45-9a6f9d112baa": "fk_Workspaces._id_to_Projects.workspace",
+    "b5dab9de-5955-4a0e-96a5-1dab410ae618": "description",
+    "c02a8b9d-2d80-4a14-9263-bf69c9f06a16": "owner",
+    "99683da7-9de5-4dce-8044-c408751f0eb2": "fk_Users._id_to_Projects.owner",
+    "78b5cc4c-ab1f-4b5b-b5d2-4e7410c3f43f": "members",
+    "d196ecf4-1e8f-49ea-8e7e-0429c51a4ba7": "sprints",
+    "6cd56c35-714c-42ef-a0c4-3eca26b6e98e": "createdAt",
+    "d6fd0ad4-8c8c-4d1d-b96b-1483db1884d6": "name",
+    "b71c9611-be91-4165-b520-28ac5f71c01a": "updatedAt",
+    "e123b2b5-4e46-4aa3-be21-eb444fcc32e1": "user",
+    "ae1e3727-f09e-4d98-8b8b-b01605c60e3a": "fk_Users._id_to_Projects.members.user",
+    "4b49fc9f-2086-4963-90e1-8571ab4c90db": "role",
+    "04768558-55c2-4046-9a6e-483e0e8a18d6": "joinedAt",
+    "52c8e696-a574-43a7-ae21-3a004659f598": "Tasks",
+    "86587d99-8287-47a4-b4e5-ac664d5b18b5": "_id",
+    "ba3c2452-1c17-485f-a5fb-29af24cdc0a6": "project",
+    "34059d95-22c8-491b-827d-574264bf6de6": "title",
+    "ef2907ab-4243-4d9e-b373-0494803075cd": "priority",
+    "980a79a9-de6c-41db-af0c-4a3972eb4a45": "status",
+    "651f47f4-5cf7-4df7-ad82-5345c8a090e8": "dueDate",
+    "431abc31-45c6-4a42-9b5f-f776ee78c4d4": "fk_Projects._id_to_Tasks.project",
+    "4ab95635-9107-444d-b0b7-6f5e11dffdf8": "owner",
+    "f7932fca-aff2-4b0f-80d0-e73d77bc4e38": "fk_Users._id_to_Tasks.owner",
+    "b1326029-0db8-4b56-ba4e-48ae90b336d7": "assigner",
+    "0177e2fb-01f9-435c-a64c-d124dbd6d8f5": "fk_Users._id_to_Tasks.assigner",
+    "3fabf553-c890-4851-962b-9fca999856b4": "complete",
+    "c67c0610-1342-43e6-9646-7d334cba736c": "comments",
+    "fd463b1c-a84a-4557-8208-529542639392": "history",
+    "5fc3ddd1-93bf-4570-824f-c69a32a171b6": "user",
+    "4e58ad8c-2f6b-40cc-9d93-fcb407d90423": "content",
+    "278f1037-c6bf-4b8a-aeee-28142266e8b0": "createdAt",
+    "aecd20ec-988b-43e7-9b33-dc79c47a6716": "createdAt",
+    "4bb92f88-4266-45c3-8cbd-c77f6c33396c": "updatedAt",
+    "8adf17b9-56a0-4b52-8407-006a222f3d25": "field",
+    "880fac59-487b-447b-9456-6fb7cecd8318": "oldValue",
+    "ddd2667f-e249-447c-b983-86187d1f8742": "newValue",
+    "fcd5b509-18cf-4136-94c9-5ed74c0d610b": "updatedBy",
+    "407475a7-dbd9-473c-a56a-669d290afa57": "fk_Users._id_to_Tasks.history.updatedBy",
+    "f9af86c2-09b9-409f-923e-f1cd4d882451": "updatedAt",
+    "75c8d4cf-85d3-4c61-ada9-39f1c1633961": "cc"
+  },
+  "definitions": {
+    "type": "definitions",
+    "properties": [],
+    "GUID": "13e1fa4a-357f-43de-8b50-47464bb20320"
+  },
+  "polyglotDefinitions": {
+    "type": "polyglotDefinitions",
+    "properties": [],
+    "GUID": "4db2db0b-43ca-4819-96f5-f174bf0ffbb1"
+  },
+  "externalDefinitions": {
+    "type": "externalDefinitions",
+    "properties": [],
+    "GUID": "cfe0de83-76c2-4b20-a709-6f89c014e494"
+  },
+  "sources": [],
+  "decorativeSymbols": [],
+  "dbVersion": "v7.x",
+  "dbVendor": "MongoDB",
+  "appTarget": "MONGODB",
+  "creationTS": "2025-09-17T13:01:45.776Z",
+  "GUID": "52e720b4-cc0d-4cf6-94c3-fd684d640326",
+  "isLineageEnabled": false,
+  "lastModifTS": "2025-09-18T02:47:02.259Z",
+  "persistenceSchemaVersion": "8",
+  "isCreatedByPlugin": true,
+  "pluginInformation": {
+    "pluginEngineVersion": "1.0.0"
+  },
+  "applicationInformation": {
+    "version": "8.4.2"
+  },
+  "hackoladeMeta": {},
+  "settings": {
+    "centralPane": {
+      "dbLevel": {
+        "erd": [
+          {
+            "GUID": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+            "x": 942.3333333333333,
+            "y": 724.3333333333331,
+            "width": 209,
+            "height": 126,
+            "color": {}
+          },
+          {
+            "GUID": "07d474d0-45c3-4e06-a196-2aa5e069d192",
+            "x": 892.4,
+            "y": 934.5999999999983,
+            "width": 284,
+            "height": 216,
+            "color": {}
+          },
+          {
+            "GUID": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+            "x": 1353.3333333333312,
+            "y": 656.2666829427062,
+            "width": 271,
+            "height": 274,
+            "color": {}
+          },
+          {
+            "GUID": "52c8e696-a574-43a7-ae21-3a004659f598",
+            "x": 931.9999999999994,
+            "y": 178.66666666666765,
+            "width": 311,
+            "height": 418,
+            "color": {}
+          }
+        ],
+        "erdDefinitions": {
+          "erd": [],
+          "rootPath": [],
+          "entities": [],
+          "decorativeSymbols": []
+        },
+        "buckets": [],
+        "collapsedNodes": [],
+        "activeRelationship": "",
+        "activeRelationshipFields": {
+          "childField": [],
+          "parentField": []
+        },
+        "selectedCollections": [],
+        "displayColorPicker": false,
+        "graphView": {
+          "erd": [],
+          "buckets": [],
+          "decorativeSymbols": [],
+          "forceLayout": true,
+          "defaultLinkLength": 300
+        },
+        "diagramViews": [
+          {
+            "GUID": "75c8d4cf-85d3-4c61-ada9-39f1c1633961",
+            "entities": [
+              {
+                "GUID": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+                "x": 1151.6666666666667,
+                "y": 1064,
+                "width": 167,
+                "height": 101,
+                "color": {}
+              },
+              {
+                "GUID": "07d474d0-45c3-4e06-a196-2aa5e069d192",
+                "x": 1108.5,
+                "y": 1260.9999990463257,
+                "width": 190,
+                "height": 209,
+                "color": {}
+              },
+              {
+                "GUID": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
+                "x": 1064,
+                "y": 1545.9999980926514,
+                "width": 186,
+                "height": 263,
+                "color": {}
+              },
+              {
+                "GUID": "52c8e696-a574-43a7-ae21-3a004659f598",
+                "x": 1207.699999523163,
+                "y": 1884.999997138977,
+                "width": 201,
+                "height": 407,
+                "color": {}
+              }
+            ],
+            "buckets": [],
+            "graphView": {
+              "erd": [],
+              "buckets": [],
+              "decorativeSymbols": [],
+              "forceLayout": true,
+              "defaultLinkLength": 300
+            },
+            "displayOptions": {},
+            "relationships": [
+              {
+                "GUID": "cf758ad3-41cc-4e46-8564-5b4b05bb7071",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1235.1666666666667,
+                    "y": 1260.9999990463257
+                  },
+                  {
+                    "x": 1235.1666666666667,
+                    "y": 1165
+                  }
+                ]
+              },
+              {
+                "GUID": "2422498c-eb6d-4892-ac64-c5505b1ddec3",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1171.8333333333333,
+                    "y": 1260.9999990463257
+                  },
+                  {
+                    "x": 1171.8333333333333,
+                    "y": 1212.9999995231628
+                  },
+                  {
+                    "x": 1214.2916666666667,
+                    "y": 1212.9999995231628
+                  },
+                  {
+                    "x": 1214.2916666666667,
+                    "y": 1165
+                  }
+                ]
+              },
+              {
+                "GUID": "8d32ef31-4277-454d-9f45-9a6f9d112baa",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1110.5,
+                    "y": 1545.9999980926514
+                  },
+                  {
+                    "x": 1110.5,
+                    "y": 1507.9999985694885
+                  },
+                  {
+                    "x": 1203.5,
+                    "y": 1507.9999985694885
+                  },
+                  {
+                    "x": 1203.5,
+                    "y": 1469.9999990463257
+                  }
+                ]
+              },
+              {
+                "GUID": "99683da7-9de5-4dce-8044-c408751f0eb2",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1157,
+                    "y": 1545.9999980926514
+                  },
+                  {
+                    "x": 1157,
+                    "y": 1355.4999990463257
+                  },
+                  {
+                    "x": 1172.5416666666667,
+                    "y": 1355.4999990463257
+                  },
+                  {
+                    "x": 1172.5416666666667,
+                    "y": 1165
+                  }
+                ]
+              },
+              {
+                "GUID": "ae1e3727-f09e-4d98-8b8b-b01605c60e3a",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1203.5,
+                    "y": 1545.9999980926514
+                  },
+                  {
+                    "x": 1203.5,
+                    "y": 1355.4999990463257
+                  },
+                  {
+                    "x": 1193.4166666666667,
+                    "y": 1355.4999990463257
+                  },
+                  {
+                    "x": 1193.4166666666667,
+                    "y": 1165
+                  }
+                ]
+              },
+              {
+                "GUID": "431abc31-45c6-4a42-9b5f-f776ee78c4d4",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1247.899999523163,
+                    "y": 1884.999997138977
+                  },
+                  {
+                    "x": 1247.899999523163,
+                    "y": 1846.9999976158142
+                  },
+                  {
+                    "x": 1157,
+                    "y": 1846.9999976158142
+                  },
+                  {
+                    "x": 1157,
+                    "y": 1808.9999980926514
+                  }
+                ]
+              },
+              {
+                "GUID": "f7932fca-aff2-4b0f-80d0-e73d77bc4e38",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1368.4999995231628,
+                    "y": 1884.999997138977
+                  },
+                  {
+                    "x": 1368.4999995231628,
+                    "y": 1524.9999985694885
+                  },
+                  {
+                    "x": 1297.7916666666667,
+                    "y": 1524.9999985694885
+                  },
+                  {
+                    "x": 1297.7916666666667,
+                    "y": 1165
+                  }
+                ]
+              },
+              {
+                "GUID": "0177e2fb-01f9-435c-a64c-d124dbd6d8f5",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1288.099999523163,
+                    "y": 1884.999997138977
+                  },
+                  {
+                    "x": 1288.099999523163,
+                    "y": 1524.9999985694885
+                  },
+                  {
+                    "x": 1256.0416666666667,
+                    "y": 1524.9999985694885
+                  },
+                  {
+                    "x": 1256.0416666666667,
+                    "y": 1165
+                  }
+                ]
+              },
+              {
+                "GUID": "407475a7-dbd9-473c-a56a-669d290afa57",
+                "autoPositioning": true,
+                "sides": [
+                  "top",
+                  "bottom"
+                ],
+                "shape": [
+                  {
+                    "x": 1328.2999995231628,
+                    "y": 1884.999997138977
+                  },
+                  {
+                    "x": 1328.2999995231628,
+                    "y": 1524.9999985694885
+                  },
+                  {
+                    "x": 1276.9166666666667,
+                    "y": 1524.9999985694885
+                  },
+                  {
+                    "x": 1276.9166666666667,
+                    "y": 1165
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "decorativeSymbols": [],
+        "nestedCollectionsLayout": "horizontal",
+        "options": [
+          {
+            "autoWidth": false,
+            "autoHeight": false,
+            "GUID": "07d474d0-45c3-4e06-a196-2aa5e069d192"
+          },
+          {
+            "autoWidth": false,
+            "autoHeight": false,
+            "GUID": "6df9155a-d808-4af1-abb4-590ce2d6ff22"
+          },
+          {
+            "autoWidth": false,
+            "autoHeight": false,
+            "GUID": "e0d741a8-d946-446b-887c-330a5f6c8c4e"
+          },
+          {
+            "autoWidth": false,
+            "autoHeight": false,
+            "GUID": "52c8e696-a574-43a7-ae21-3a004659f598"
+          }
+        ],
+        "relationshipUpdateDisabled": false
+      },
+      "collectionLevel": {},
+      "changed": false
+    },
+    "dtDiagram": {
+      "collapsedNodes": [],
+      "shouldDistributeCollections": false
+    }
+  }
+}
