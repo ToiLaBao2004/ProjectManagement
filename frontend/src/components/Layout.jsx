@@ -11,36 +11,36 @@ const Layout = ({ onLogout, user }) => {
     const [error, setError] = useState(null);
 
     const fetchTasks = useCallback(async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                onLogout(); // Gọi logout để chuyển về trang login
-                return;
-            }
-
-            const { data } = await axios.get("http://localhost:4000/task/assigner", {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            const arr = Array.isArray(data) ? data :
-                Array.isArray(data?.tasks) ? data.tasks :
-                    Array.isArray(data?.data) ? data.data : [];
-            setTasks(arr);
-        } catch (err) {
-            console.error(err);
-            setError(err.message || "Could not load tasks");
-            if (err.response?.status === 401) {
-                // Token hết hạn hoặc không hợp lệ
-                localStorage.removeItem('token');
-                localStorage.removeItem('currentUser');
-                onLogout();
-            }
-        } finally {
-            setLoading(false);
+    setLoading(true);
+    setError(null);
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            onLogout(); // Gọi logout để chuyển về trang login
+            return;
         }
-    }, [onLogout]);
+
+        const { data } = await axios.get("http://localhost:4000/task/assigner", {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        const arr = Array.isArray(data) ? data :
+            Array.isArray(data?.tasks) ? data.tasks :
+                Array.isArray(data?.data) ? data.data : [];
+        setTasks(arr);
+    } catch (err) {
+        console.error(err);
+        setError(err.message || "Could not load tasks");
+        if (err.response?.status === 401) {
+            // Token hết hạn hoặc không hợp lệ
+            localStorage.removeItem('token');
+            localStorage.removeItem('currentUser');
+            onLogout();
+        }
+    } finally {
+        setLoading(false);
+    }
+}, [onLogout]);
 
     useEffect(() => { fetchTasks() }, [fetchTasks])
 
@@ -131,7 +131,7 @@ const Layout = ({ onLogout, user }) => {
                                 <StatCard title='Completion Rate' value={`${stats.completionPercentage}%`} icon={<Circle className='w-3.5
                                 h-3.5 sm:w-4 sm:h-4 text-purple-500'/>} />
                             </div>
-                            <hr className='my-3 sm:my-4 border-purple-100' />
+                            <hr className='my-3 sm:my-4 border-purple-100'/>
                             <div className='space-y-2 sm:space-y-3'>
                                 <div className='flex items-center justify-between text-gray-700'>
                                     <span className='text-sm sm:text-sm font-medium flex items-center gap-1.5'>
@@ -149,7 +149,7 @@ const Layout = ({ onLogout, user }) => {
                                         overflow-hidden'>
                                             <div className='h-full bg-gradient-to-r from-blue-500 to-blue-600
                                             transition-all duration-500'
-                                                style={{ width: `${stats.completionPercentage}` }} />
+                                                style={{ width: `${stats.completionPercentage}`}}/>
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +158,7 @@ const Layout = ({ onLogout, user }) => {
                         <div className='bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-sky-100'>
                             <h3 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 flex
                             items-center gap-2'>
-                                <Clock className='w-4 h-4 sm:w-5 sm:h-5 text-sky-500' />
+                                <Clock className='w-4 h-4 sm:w-5 sm:h-5 text-sky-500'/>
                                 Recent Activity
                             </h3>
                             <div className='space-y-2 sm:space-y-3'>
@@ -168,7 +168,7 @@ const Layout = ({ onLogout, user }) => {
                                     transition-colors duration-200 border border-transparent hover:border-purple-100'>
                                         <div className='flex-1 min-w-0'>
                                             <p className='text-sm font-medium text-gray-700 break-words whitespace-normal'>
-                                                {task.title}
+                                            {task.title}
                                             </p>
                                             <p>
                                                 {task.createdAt ? new Date(task.createdAt).toLocaleDateString()
@@ -178,7 +178,7 @@ const Layout = ({ onLogout, user }) => {
                                         <span className={`px-2 py-1 text-xs rounded-full shrink-0 ml-2
                                             ${task.status ? 'bg-green-100 text-green-700'
                                                 : 'bg-fuchsia-100 text-fuchsia-700'}`}>
-                                            {task.status ? "Completed" : "Pending"}
+                                                    {task.status ? "Completed" : "Pending"}
                                         </span>
                                     </div>
                                 ))}
@@ -186,7 +186,7 @@ const Layout = ({ onLogout, user }) => {
                                     <div className='text-center py-4 sm:py-6 px-2'>
                                         <div className='w-12 h-12 sm:w-16 sm:h-16 mx-auto sm:mb-4 rounded-full
                                         bg-pink-100 flex items-center justify-center'>
-                                            <Clock className='w-6 h-6 sm:w-8 sm:h-8 text-purple-500' />
+                                            <Clock className='w-6 h-6 sm:w-8 sm:h-8 text-purple-500'/>
                                         </div>
                                         <p className='text-sm text-gray-500'>
                                             No recent activity

@@ -37,10 +37,10 @@ const SignUp = ({ onSwitchMode }) => {
     };
 
     return (
-        <div className="max-w-md w-full bg-white shadow-lg border border-purple-100 rounded-xl p-8">
+        <div className="max-w-md w-full bg-white shadow-lg border border-blue-100 rounded-xl p-8">
             {/* Header */}
             <div className="mb-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-full
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-sky-600 rounded-full
             mx-auto flex items-center justify-center mb-4">
                     <UserPlus className="w-8 h-8 text-white" />
                 </div>
@@ -66,7 +66,7 @@ const SignUp = ({ onSwitchMode }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Name */}
                 <div className="flex items-center border rounded px-3 py-2">
-                    <User className="text-purple-500 w-5 h-5 mr-2" />
+                    <User className="text-blue-500 w-5 h-5 mr-2" />
                     <input
                         type="text"
                         placeholder="Full Name"
@@ -81,7 +81,7 @@ const SignUp = ({ onSwitchMode }) => {
 
                 {/* Email */}
                 <div className="flex items-center border rounded px-3 py-2">
-                    <Mail className="text-purple-500 w-5 h-5 mr-2" />
+                    <Mail className="text-blue-500 w-5 h-5 mr-2" />
                     <input
                         type="email"
                         placeholder="Email Address"
@@ -96,7 +96,7 @@ const SignUp = ({ onSwitchMode }) => {
 
                 {/* Password */}
                 <div className="flex items-center border rounded px-3 py-2">
-                    <Lock className="text-purple-500 w-5 h-5 mr-2" />
+                    <Lock className="text-blue-500 w-5 h-5 mr-2" />
                     <input
                         type="password"
                         placeholder="Password"
@@ -112,7 +112,7 @@ const SignUp = ({ onSwitchMode }) => {
                 {/* Submit */}
                 <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 bg-purple-600 hover:bg-purple-700
+                    className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700
               text-white font-medium py-2 px-4 rounded transition-colors disabled:opacity-50"
                     disabled={loading}
                 >
@@ -125,7 +125,7 @@ const SignUp = ({ onSwitchMode }) => {
                 Already have an account?{" "}
                 <button
                     onClick={onSwitchMode}
-                    className="text-purple-600 hover:text-purple-700 hover:underline font-medium transition-colors"
+                    className="text-blue-600 hover:text-blue-700 hover:underline font-medium transition-colors"
                 >
                     Login
                 </button>
