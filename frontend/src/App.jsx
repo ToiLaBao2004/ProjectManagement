@@ -1,18 +1,41 @@
-import React, { useState } from 'react';
-import WorkspaceList from './pages/WorkspaceList';
-import CreateWorkspace from './pages/CreateWorkspace';
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import Dashboard from './pages/Dashboard'
+import SignUp from './pages/SignUp'
+import Login from './pages/Login'
+import GoogleCallback from './pages/GoogleCallback'
+import { authAPI } from './services/authService'
 
-function App() {
-    // Giả sử token được lấy từ đăng nhập
-    const [token] = useState('your_jwt_token_here');
+const App = () => {
+    const handleLogout = () => {
+        authAPI.logout();
+        window.location.href = '/login';
+    };
+
+    const currentUser = authAPI.getCurrentUser();
 
     return (
-        <div>
-            <h1>Workspace Management</h1>
-            <CreateWorkspace token={token} />
-            <WorkspaceList token={token} />
-        </div>
-    );
+        <Router>
+            <Routes>
+                {/* Auth Routes (no layout) */}
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/auth/google/callback" element={<GoogleCallback />} />
+                
+                {/* Protected Routes (with layout) */}
+                <Route path="/*" element={
+                    <Layout user={currentUser} onLogout={handleLogout}>
+                        <Routes>
+                            <Route path="/" element={<Dashboard />} />
+                            <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/profile" element={<div className="p-8 text-center text-gray-600">Profile page coming soon...</div>} />
+                        </Routes>
+                    </Layout>
+                } />
+            </Routes>
+        </Router>
+    )
 }
 
-export default App;
+export default App
