@@ -14,8 +14,7 @@ const Layout = ({ onLogout, user }) => {
         setLoading(true)
         setError(null)
         try {
-            // const token = localStorage.getItem('token')
-            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGNkNWIwMGU0NjJkNDRlMTEzODBmNTIiLCJpYXQiOjE3NTg1MjgzMzcsImV4cCI6MTc1ODYxNDczN30.6PiqkVxkMdg9R7zOjCDM4kJ21XGNxPQK1Ielsy2WhyU"
+            const token = localStorage.getItem('token')
             if (!token) throw new Error("No auth token found")
 
             const { data } = await axios.get("http://localhost:4000/task/assigner", {
