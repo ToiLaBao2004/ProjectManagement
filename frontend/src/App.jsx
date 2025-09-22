@@ -3,6 +3,9 @@ import { Outlet, Route, Routes, useNavigate, useLocation } from "react-router-do
 import Layout from './components/Layout';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import WorkspacePage from './pages/WorkspacePage'; // New
+import ProjectPage from './pages/ProjectPage'; // New
+import MyTasksPage from './pages/MyTasksPage'; // New
 
 const App = () => {
     const navigate = useNavigate();
@@ -36,16 +39,9 @@ const App = () => {
         
         if (token && userData) {
             try {
-                // Lưu token
                 localStorage.setItem('token', token);
-                
-                // Parse user data từ URL params
                 const user = JSON.parse(decodeURIComponent(userData));
-                
-                // Set user state
                 setCurrentUser(user);
-                
-                // Clear URL params và redirect về home
                 navigate('/', { replace: true });
             } catch (error) {
                 console.error('Error processing Google callback:', error);
@@ -71,7 +67,7 @@ const App = () => {
         navigate('/login', { replace: true });
     };
 
-    // Protected Route Component
+    // Protected Layout
     const ProtectedLayout = () => {
         const token = localStorage.getItem('token');
         
@@ -87,7 +83,7 @@ const App = () => {
         );
     };
 
-    // Auth Wrapper cho Login/Signup
+    // Auth Wrapper for Login/Signup
     const AuthWrapper = ({ children }) => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -124,10 +120,15 @@ const App = () => {
                             />
                         </div>
                     </AuthWrapper>
-            } />
+                } 
+            />
             <Route path='/' element={<ProtectedLayout />}>
                 <Route index element={<div>Home Page Content</div>} />
-                {/* Thêm các route khác ở đây */}
+                {/* New routes */}
+                <Route path="/workspace/:workspaceId" element={<WorkspacePage />} />
+                <Route path="/workspace/:workspaceId/project/:projectId" element={<ProjectPage />} />
+                <Route path="/tasks" element={<MyTasksPage />} />
+                {/* Add more routes if needed */}
             </Route>
         </Routes>
     );
