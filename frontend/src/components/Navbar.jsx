@@ -2,115 +2,114 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Zap, Settings, User, ChevronDown, LogOut } from 'lucide-react';
 
-const Navbar = ({ user, onLogout }) => { 
+const Navbar = ({ user = {}, onLogout }) => {
     const navigate = useNavigate();
-    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
-    
-    // Default user data nếu không có props
-    const currentUser = user || {
-        name: "User Name",
-        email: "user@example.com",
-        avatar: "U"
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuref = useRef(null);
+
+    // Default user nếu không truyền từ props
+    const currentUser = {
+        name: user.name || "User Name",
+        email: user.email || "user@example.com",
+        avatar: user.avatar || null
     };
 
-    // Close dropdown when clicking outside
+    // Đóng dropdown khi click ra ngoài
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsUserDropdownOpen(false);
+            if (menuref.current && !menuref.current.contains(event.target)) {
+                setMenuOpen(false);
             }
         };
-
         document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     const handleLogout = () => {
-        console.log("Logging out...");
-        setIsUserDropdownOpen(false);
-        if (onLogout) {
-            onLogout(); // Gọi function từ Layout/parent component
-        }
-        // navigate('/login');
+        setMenuOpen(false);
+        if (onLogout) onLogout();
     };
 
-    const handleProfileSetting = () => {
-        console.log("Opening profile settings...");
-        setIsUserDropdownOpen(false);
-        navigate('/profile');
-    };
-    
     return (
-        <header className='sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 font-sans'>
+        <header className='sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200 font-sans'>
             <div className='flex items-center justify-between px-4 py-3 md:px-6 max-w-7xl mx-auto'>
-                {/*LOGO*/}
+                {/* LOGO */}
                 <div className='flex items-center gap-2 cursor-pointer group'
-                     onClick={() => navigate('/')}>  
-                    {/*LOGO*/}
-                    <div className='relative w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 shadow-lg group-hover:shadow-purple-300/50 group-hover:scale-105 transition-all duration-300'>
+                    onClick={() => navigate('/')}>
+                    <div className='relative w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br
+                        from-sky-400 via-blue-500 to-indigo-500 shadow-lg group-hover:shadow-purple-300/50
+                        group-hover:scale-105 transition-all duration-300'>
                         <Zap className='w-6 h-6 text-white' />
+                        <div className='absolute -bottom-1 -right-1 w-3 h-3 bg-white rounded-full shadow-md animate-ping' />
                     </div>
-                    <span className='text-2xl font-bold bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent group-hover:from-fuchsia-400 group-hover:via-purple-400 group-hover:to-indigo-400 transition-all duration-300'>
+                    <span className='text-2xl font-extrabold bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-500 bg-clip-text text-transparent tracking-wide'>
                         TaskFlow
                     </span>
                 </div>
-                
-                {/* Right Section - Settings and User */}
-                <div className='flex items-center gap-3'>
-                    {/* Settings Button */}
-                    <button 
-                        className='p-2 rounded-lg text-gray-600 hover:text-purple-600 hover:bg-gray-100 transition-all duration-300 group'
-                        onClick={() => {/* Handle settings click */}}
+
+                {/* RIGHT SIDE */}
+                <div className='flex items-center gap-4'>
+                    {/* Settings */}
+                    <button
+                        className='p-2 text-gray-600 hover:text-sky-400 transition-colors duration-300 hover:bg-sky-50 rounded-full'
+                        onClick={() => navigate('/profile')}
                     >
-                        <Settings className='w-6 h-6 group-hover:rotate-90 transition-transform duration-300' />
+                        <Settings className='w-5 h-5' />
                     </button>
 
-                    {/* User Dropdown */}
-                    <div className='relative' ref={dropdownRef}>
-                        <button 
-                            className='flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 transition-all duration-300 group'
-                            onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                    {/* USER DROPDOWN */}
+                    <div ref={menuref} className='relative'>
+                        <button
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            className='flex items-center gap-2 px-3 py-2 rounded-full cursor-pointer hover:bg-sky-50 transition-colors duration-300 border border-transparent hover:border-sky-200'
                         >
-                            {/* User Avatar */}
-                            <div className='w-8 h-8 rounded-full bg-gradient-to-br from-fuchsia-500 via-purple-500 to-indigo-500 flex items-center justify-center text-white font-semibold text-sm'>
-                                {currentUser.avatar}
+                            <div className='relative'>
+                                {currentUser.avatar ? (
+                                    <img src={currentUser.avatar} alt="Avatar" className="w-9 h-9 rounded-full shadow-sm" />
+                                ) : (
+                                    <div className='w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-sky-400 to-sky-600 text-white font-semibold shadow-md'>
+                                        {currentUser.name?.[0]?.toUpperCase() || 'U'}
+                                    </div>
+                                )}
+                                <div className='absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white animate-pulse' />
                             </div>
-                            <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${isUserDropdownOpen ? 'rotate-180' : ''}`} />
+                            <div className='text-left hidden md:block'>
+                                <p className='text-sm font-medium text-gray-800'>{currentUser.name}</p>
+                                <p className='text-xs font-normal text-gray-500'>{currentUser.email}</p>
+                            </div>
+                            <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-300 ${menuOpen ? 'rotate-180' : ''}`} />
                         </button>
 
-                        {/* Dropdown Menu */}
-                        {isUserDropdownOpen && (
-                            <div className='absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50'>
-                                {/* Profile Setting */}
-                                <button
-                                    onClick={handleProfileSetting}
-                                    className='flex items-center gap-3 w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-50 transition-colors duration-200'
-                                >
-                                    <Settings className='w-5 h-5 text-gray-500' />
-                                    <span className='font-medium'>Profile Setting</span>
-                                </button>
-
-                                {/* Divider */}
-                                <hr className='my-1 border-gray-100' />
-
-                                {/* Logout */}
-                                <button
-                                    onClick={handleLogout}
-                                    className='flex items-center gap-3 w-full px-4 py-3 text-left text-red-600 hover:bg-red-50 transition-colors duration-200'
-                                >
-                                    <LogOut className='w-5 h-5' />
-                                    <span className='font-medium'>Logout</span>
-                                </button>
-                            </div>
+                        {menuOpen && (
+                            <ul className='absolute top-14 right-0 w-56 bg-white rounded-2xl shadow-xl border border-purple-100 z-50 overflow-hidden animate-fadeIn'>
+                                <li className='p-2'>
+                                    <button
+                                        onClick={() => {
+                                            setMenuOpen(false);
+                                            navigate('/profile');
+                                        }}
+                                        className='w-full px-4 py-2.5 text-left hover:bg-purple-50 text-sm text-gray-700 transition-colors flex items-center gap-2 group'
+                                    >
+                                        <Settings className='w-4 h-4 text-gray-700' />
+                                        Profile Setting
+                                    </button>
+                                </li>
+                                <li className='p-2'>
+                                    <button
+                                        onClick={handleLogout}
+                                        className='flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-red-50 text-red-600'
+                                    >
+                                        <LogOut className='w-4 h-4' />
+                                        Logout
+                                    </button>
+                                </li>
+                            </ul>
                         )}
                     </div>
                 </div>
             </div>
         </header>
-    )
+    );
 }
 
 export default Navbar
