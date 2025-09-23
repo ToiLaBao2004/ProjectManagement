@@ -53,7 +53,7 @@ const Login = ({ onSwitchMode, onLogin }) => {
     return (
         <div className="max-w-md w-full bg-white shadow-lg border border-purple-100 rounded-xl p-8">
             <div className="mb-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-full mx-auto flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-sky-500 to-blue-600 rounded-full mx-auto flex items-center justify-center mb-4">
                     <LogIn className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800">Welcome Back</h2>
@@ -76,7 +76,7 @@ const Login = ({ onSwitchMode, onLogin }) => {
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="flex items-center border rounded px-3 py-2">
-                    <Mail className="text-purple-500 w-5 h-5 mr-2" />
+                    <Mail className="text-blue-500 w-5 h-5 mr-2" />
                     <input
                         type="email"
                         placeholder="Email Address"
@@ -90,7 +90,7 @@ const Login = ({ onSwitchMode, onLogin }) => {
                 </div>
 
                 <div className="flex items-center border rounded px-3 py-2">
-                    <Lock className="text-purple-500 w-5 h-5 mr-2" />
+                    <Lock className="text-blue-500 w-5 h-5 mr-2" />
                     <input
                         type="password"
                         placeholder="Password"
@@ -105,7 +105,7 @@ const Login = ({ onSwitchMode, onLogin }) => {
 
                 <button
                     type="submit"
-                    className="w-full bg-purple-600 text-white py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-sky-700 transition-colors"
                     disabled={loading}
                 >
                     {loading ? "Logging In..." : "Login"}
@@ -131,7 +131,7 @@ const Login = ({ onSwitchMode, onLogin }) => {
                 Don't have an account?{" "}
                 <button
                     onClick={onSwitchMode}
-                    className="text-purple-600 hover:text-purple-700 hover:underline font-medium transition-colors"
+                    className="text-sky-600 hover:text-blue-700 hover:underline font-medium transition-colors"
                     disabled={loading}
                 >
                     Sign Up

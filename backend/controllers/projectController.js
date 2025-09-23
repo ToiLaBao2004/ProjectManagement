@@ -39,11 +39,23 @@ export async function getProjects(req, res) {
         if (!workspace) {
             return res.status(404).json({ success: false, message: 'Workspace not found.' });
         }
-        const isMember = workspace.members.some(member => member.user.toString() === req.user.id);
-        if (!isMember) {
+
+        // Kiểm tra user có phải là thành viên workspace không
+        const isMemberOfWorkspace = workspace.members.some(
+            member => member.user.toString() === req.user.id
+        );
+        if (!isMemberOfWorkspace) {
             return res.status(403).json({ success: false, message: 'Access denied. You are not a member of this workspace.' });
         }
-        const projects = await Project.find({ workspace: workspaceId }).populate('owner', 'username email').populate('members.user', 'username email');
+
+        // Lấy project mà user là member
+        const projects = await Project.find({ 
+            workspace: workspaceId, 
+            'members.user': req.user.id  // chỉ lấy project mà user là member
+        })
+        .populate('owner', 'name email')
+        .populate('members.user', 'name email');
+
         res.status(200).json({ success: true, projects });
     } catch (error) {
         console.log(error);
@@ -104,21 +116,38 @@ export async function editMemberRole(req, res) {
     try {
         const { projectId } = req.params;
         const { userId, role } = req.body;
+
         const project = await Project.findById(projectId);
         if (!project) {
             return res.status(404).json({ success: false, message: 'Project not found.' });
         }
-        const isManager = project.members.some(member => member.user.toString() === req.user.id && member.role === 'manager');
-        if (!isManager && project.owner.toString() !== req.user.id) {
-            return res.status(403).json({ success: false, message: 'Only project managers can update member roles.' });
+
+        // Kiểm tra quyền của người thực hiện: phải là manager hoặc owner
+        const isManager = project.members.some(
+            member => member.user.toString() === req.user.id && member.role === 'manager'
+        );
+        const isOwner = project.owner.toString() === req.user.id;
+        if (!isManager && !isOwner) {
+            return res.status(403).json({ success: false, message: 'Only project managers or owner can update member roles.' });
         }
+
+        // Tìm member cần cập nhật
         const member = project.members.find(member => member.user.toString() === userId);
         if (!member) {
             return res.status(404).json({ success: false, message: 'Member not found in project.' });
         }
+
+        // Ngăn không đổi role nếu member là owner
+        if (userId === project.owner.toString()) {
+            return res.status(403).json({ success: false, message: 'Cannot change the role of the project owner.' });
+        }
+
+        // Cập nhật role
         member.role = role;
         await project.save();
+
         res.status(200).json({ success: true, message: 'Member role updated.', project });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: 'Server error.' });
@@ -129,20 +158,40 @@ export async function removeMemberFromProject(req, res) {
     try {
         const { projectId } = req.params;
         const { userId } = req.body;
+
         const project = await Project.findById(projectId);
         if (!project) {
             return res.status(404).json({ success: false, message: 'Project not found.' });
         }
-        const isManager = project.members.some(member => member.user.toString() === req.user.id && member.role === 'manager');
-        if (!isManager && project.owner.toString() !== req.user.id) {
-            return res.status(403).json({ success: false, message: 'Only project managers can remove members.' });
+
+        // Kiểm tra quyền: phải là manager hoặc owner
+        const isManager = project.members.some(
+            member => member.user.toString() === req.user.id && member.role === 'manager'
+        );
+        const isOwner = project.owner.toString() === req.user.id;
+        if (!isManager && !isOwner) {
+            return res.status(403).json({ success: false, message: 'Only project managers or owner can remove members.' });
         }
+
+        // Ngăn xóa owner
+        if (userId === project.owner.toString()) {
+            return res.status(403).json({ success: false, message: 'Cannot remove the project owner.' });
+        }
+
+        // Ngăn manager xóa chính mình (tuỳ chọn)
+        if (userId === req.user.id) {
+            return res.status(403).json({ success: false, message: 'Managers cannot remove themselves.' });
+        }
+
         const member = project.members.find(member => member.user.toString() === userId);
         if (!member) {
             return res.status(404).json({ success: false, message: 'Member not found in project.' });
         }
+
+        // Xóa member
         project.members = project.members.filter(member => member.user.toString() !== userId);
         await project.save();
+
         res.status(200).json({ success: true, message: 'Member removed from project.', project });
     } catch (error) {
         console.log(error);

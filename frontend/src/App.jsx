@@ -3,6 +3,12 @@ import { Outlet, Route, Routes, useNavigate, useLocation } from "react-router-do
 import Layout from './components/Layout';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import WorkspacePage from './pages/WorkspacePage';
+import ProjectPage from './pages/ProjectPage';
+import MyTasksPage from './pages/MyTasksPage';
+import WorkspaceSettings from './pages/WorkspaceSettingPage'; // New
+import WorkspaceMembers from './pages/WorkspaceMembersPage'; // New
+import TaskDetail from './pages/TaskDetail'
 
 const App = () => {
     const navigate = useNavigate();
@@ -20,7 +26,7 @@ const App = () => {
         }
     }, [currentUser]);
 
-    // Kiểm tra token khi app khởi động
+    // Check token on app start
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token && location.pathname !== '/login' && location.pathname !== '/signup') {
@@ -28,7 +34,7 @@ const App = () => {
         }
     }, [navigate, location.pathname]);
 
-    // Xử lý Google callback
+    // Handle Google callback
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const token = urlParams.get('token');
@@ -36,16 +42,9 @@ const App = () => {
         
         if (token && userData) {
             try {
-                // Lưu token
                 localStorage.setItem('token', token);
-                
-                // Parse user data từ URL params
                 const user = JSON.parse(decodeURIComponent(userData));
-                
-                // Set user state
                 setCurrentUser(user);
-                
-                // Clear URL params và redirect về home
                 navigate('/', { replace: true });
             } catch (error) {
                 console.error('Error processing Google callback:', error);
@@ -71,7 +70,7 @@ const App = () => {
         navigate('/login', { replace: true });
     };
 
-    // Protected Route Component
+    // Protected Layout
     const ProtectedLayout = () => {
         const token = localStorage.getItem('token');
         
@@ -87,7 +86,7 @@ const App = () => {
         );
     };
 
-    // Auth Wrapper cho Login/Signup
+    // Auth Wrapper for Login/Signup
     const AuthWrapper = ({ children }) => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -124,10 +123,16 @@ const App = () => {
                             />
                         </div>
                     </AuthWrapper>
-            } />
+                } 
+            />
             <Route path='/' element={<ProtectedLayout />}>
                 <Route index element={<div>Home Page Content</div>} />
-                {/* Thêm các route khác ở đây */}
+                <Route path="/workspace/:workspaceId" element={<WorkspacePage />} />
+                <Route path="/workspace/:workspaceId/project/:projectId" element={<ProjectPage />} />
+                <Route path="/workspace/:workspaceId/settings" element={<WorkspaceSettings />} />
+                <Route path="/workspace/:workspaceId/members" element={<WorkspaceMembers />} />
+                <Route path="/my-tasks" element={<MyTasksPage />} />
+                <Route path="/task/:taskId" element={<TaskDetail />} />
             </Route>
         </Routes>
     );

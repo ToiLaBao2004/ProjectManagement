@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import sprintSchema from "./sprintModel.js";
+import TaskModel from './taskModel.js';
 
 const projectSchema = new mongoose.Schema({
     workspace: { type: mongoose.Schema.Types.ObjectId, ref: 'Workspace', required: true },
@@ -14,7 +15,29 @@ const projectSchema = new mongoose.Schema({
     sprints: [sprintSchema],
 }, { timestamps: true });
 
-// Kiểm tra nếu model đã tồn tại để tránh lỗi OverwriteModelError
-const ProjectModel = mongoose.model.Project || mongoose.model('Project', projectSchema);
+// Document middleware
+projectSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
+    try {
+        await TaskModel.deleteMany({ project: this._id }); // triggers Task hooks
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
 
+// Query middleware
+projectSchema.pre('deleteMany', { document: false, query: true }, async function(next) {
+    try {
+        const filter = this.getFilter();
+        const projects = await mongoose.models.Project.find(filter);
+        for (const project of projects) {
+            await project.deleteOne();
+        }
+        next();
+    } catch (err) {
+        next(err);
+    }
+});
+
+const ProjectModel = mongoose.models.Project || mongoose.model('Project', projectSchema);
 export default ProjectModel;
