@@ -9,7 +9,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
         title: '', 
         description: '', 
         priority: 'medium', 
-        status: 'todo', 
+        status: 'pending', 
         dueDate: '',
         assigner: ''
     });
@@ -57,7 +57,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
-            const { data } = await axios.post(
+            const { data, status } = await axios.post(
                 `${API_URL}/workspace/${workspaceId}/project/${projectId}/task/create`,
                 {
                     title: formData.title.trim(),
@@ -70,20 +70,32 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                 { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
             );
 
-            if (!data.success) throw new Error(data.message || 'Failed to create task');
+            // Debug the response
+            console.log('API Response:', { data, status });
 
-            setMessage({ text: 'Task đã được tạo thành công!', type: 'success' });
+            // Check if the request was successful (status 200-299)
+            if (status >= 200 && status < 300) {
+                const task = data.newTask; // Match the backend's response key
+                if (!task) {
+                    throw new Error(data.message || 'Task created but no task data returned');
+                }
 
-            setTimeout(() => {
-                setFormData({ title: '', description: '', priority: 'medium', status: 'todo', dueDate: '', assigner: '' });
-                setShowMembersDropdown(false);
-                onClose();
-                if (onTaskCreated && data.task) onTaskCreated(data.task);
-            }, 1500);
+                setMessage({ text: 'Task created successfully!', type: 'success' });
+
+                setTimeout(() => {
+                    setFormData({ title: '', description: '', priority: 'medium', status: 'pending', dueDate: '', assigner: '' });
+                    setShowMembersDropdown(false);
+                    onClose();
+                    if (onTaskCreated && task) onTaskCreated(task);
+                }, 1500);
+            } else {
+                throw new Error(data.message || `Unexpected status code: ${status}`);
+            }
 
         } catch (error) {
-            const errorMessage = error.response?.data?.message || error.message || 'Có lỗi xảy ra khi tạo task.';
+            const errorMessage = error.response?.data?.message || error.message || 'Error occurred while creating task.';
             setMessage({ text: errorMessage, type: 'error' });
+            console.error('Task creation error:', error.response?.data || error);
         } finally {
             setLoading(false);
         }
@@ -130,8 +142,8 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                                 <FileText className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-900">Tạo Task Mới</h3>
-                                <p className="text-sm text-gray-600">Tạo task mới trong <span className="font-medium">{projectName}</span></p>
+                                <h3 className="text-xl font-bold text-gray-900">Create New Task</h3>
+                                <p className="text-sm text-gray-600">Add a task to <span className="font-medium">{projectName}</span></p>
                             </div>
                         </div>
                         <button
@@ -158,7 +170,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
 
                     {/* Title */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Tiêu đề <span className="text-red-500">*</span></label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Title <span className="text-red-500">*</span></label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-1">
                                 <Plus className="h-5 w-5 text-gray-400" />
@@ -166,7 +178,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                             <input
                                 type="text"
                                 name="title"
-                                placeholder="Nhập tiêu đề task..."
+                                placeholder="Enter task title..."
                                 value={formData.title}
                                 onChange={handleInputChange}
                                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -179,11 +191,11 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
 
                     {/* Description */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Mô tả</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                         <textarea
                             name="description"
                             rows={3}
-                            placeholder="Mô tả chi tiết về task..."
+                            placeholder="Enter detailed description..."
                             value={formData.description}
                             onChange={handleInputChange}
                             className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
@@ -195,7 +207,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                     {/* Priority & Status */}
                     <div className="grid grid-cols-2 gap-3">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Độ ưu tiên</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
                             <select
                                 name="priority"
                                 value={formData.priority}
@@ -203,14 +215,13 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                                 className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                                 disabled={loading}
                             >
-                                <option value="low">Thấp</option>
-                                <option value="medium">Trung bình</option>
-                                <option value="high">Cao</option>
-                                <option value="urgent">Khẩn cấp</option>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Trạng thái</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
                             <select
                                 name="status"
                                 value={formData.status}
@@ -218,16 +229,16 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                                 className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                                 disabled={loading}
                             >
-                                <option value="todo">Chưa làm</option>
-                                <option value="in-progress">Đang làm</option>
-                                <option value="completed">Hoàn thành</option>
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="completed">Completed</option>
                             </select>
                         </div>
                     </div>
 
                     {/* Due Date */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Ngày hết hạn (tùy chọn)</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Due Date (optional)</label>
                         <input
                             type="date"
                             name="dueDate"
@@ -240,7 +251,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
 
                     {/* Assigner */}
                     <div className="relative">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Giao cho <span className="text-red-500">*</span></label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Assign To <span className="text-red-500">*</span></label>
                         <div className="relative">
                             <div className="flex items-center border border-gray-300 rounded-2xl focus-within:ring-2 focus-within:ring-green-500 focus-within:border-transparent transition-all bg-white/70 backdrop-blur-sm">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none pt-1">
@@ -248,7 +259,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                                 </div>
                                 <input
                                     type="text"
-                                    placeholder="Chọn thành viên..."
+                                    placeholder="Select a member..."
                                     value={displayAssigner}
                                     onFocus={() => !loadingMembers && setShowMembersDropdown(true)}
                                     className="w-full pl-10 pr-10 py-3 bg-transparent border-none focus:outline-none"
@@ -308,7 +319,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                                 </div>
                             )}
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">Chọn thành viên để giao task (mặc định là bạn)</p>
+                        <p className="text-xs text-gray-500 mt-1">Select a member to assign the task (default is you)</p>
                     </div>
 
                     {/* Actions */}
@@ -319,7 +330,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                             className="flex-1 py-3 px-4 border border-gray-300 rounded-2xl text-gray-700 font-medium hover:bg-gray-100 transition-all disabled:opacity-50"
                             disabled={loading}
                         >
-                            Hủy
+                            Cancel
                         </button>
                         <button
                             type="submit"
@@ -329,12 +340,12 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                             {loading ? (
                                 <>
                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    Đang tạo...
+                                    Creating...
                                 </>
                             ) : (
                                 <>
                                     <Plus className="w-4 h-4" />
-                                    Tạo Task
+                                    Create Task
                                 </>
                             )}
                         </button>

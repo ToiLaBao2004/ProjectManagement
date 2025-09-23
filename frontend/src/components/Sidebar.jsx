@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom'; // Thêm useParams
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { 
     ChevronDown, 
     Briefcase, 
@@ -23,7 +23,7 @@ const Sidebar = ({ user, tasks }) => {
     const [isWorkspaceModalOpen, setIsWorkspaceModalOpen] = useState(false);
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
     const navigate = useNavigate();
-    const { workspaceId } = useParams(); // ← THÊM DÒNG NÀY
+    const { workspaceId } = useParams();
 
     const API_URL = "http://localhost:4000";
 
@@ -33,7 +33,10 @@ const Sidebar = ({ user, tasks }) => {
             setLoadingWorkspaces(true);
             try {
                 const token = localStorage.getItem('token');
-                if (!token) return;
+                if (!token) {
+                    navigate('/login');
+                    return;
+                }
 
                 const { data } = await axios.get(`${API_URL}/workspace/my`, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -41,13 +44,12 @@ const Sidebar = ({ user, tasks }) => {
                 
                 setWorkspaces(data.workspaces || []);
                 
-                // Nếu có workspaceId từ URL, chọn workspace đó
+                // Select workspace from URL or default to first workspace
                 if (workspaceId && data.workspaces.length > 0) {
                     const workspaceFromUrl = data.workspaces.find(ws => ws._id === workspaceId);
                     if (workspaceFromUrl) {
                         setSelectedWorkspace(workspaceFromUrl);
                     } else {
-                        // Fallback: chọn workspace đầu tiên
                         setSelectedWorkspace(data.workspaces[0]);
                     }
                 } else if (data.workspaces.length > 0) {
@@ -55,6 +57,11 @@ const Sidebar = ({ user, tasks }) => {
                 }
             } catch (err) {
                 console.error('Error fetching workspaces:', err);
+                if (err.response?.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('currentUser');
+                    navigate('/login');
+                }
             } finally {
                 setLoadingWorkspaces(false);
             }
@@ -63,9 +70,9 @@ const Sidebar = ({ user, tasks }) => {
         if (user && user.id) {
             fetchWorkspaces();
         }
-    }, [user, workspaceId]); // ← THÊM workspaceId vào dependency
+    }, [user, workspaceId, navigate]);
 
-    // Sync selectedWorkspace khi URL thay đổi (KHÔNG cần useEffect riêng)
+    // Sync selectedWorkspace when URL changes
     useEffect(() => {
         if (workspaceId && workspaces.length > 0) {
             const workspaceFromUrl = workspaces.find(ws => ws._id === workspaceId);
@@ -90,13 +97,18 @@ const Sidebar = ({ user, tasks }) => {
                 setProjects(data.projects || []);
             } catch (err) {
                 console.error('Error fetching projects:', err);
+                if (err.response?.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('currentUser');
+                    navigate('/login');
+                }
             } finally {
                 setLoadingProjects(false);
             }
         };
 
         fetchProjects();
-    }, [selectedWorkspace]);
+    }, [selectedWorkspace, navigate]);
 
     const handleWorkspaceSelect = (workspace) => {
         setSelectedWorkspace(workspace);
@@ -104,18 +116,18 @@ const Sidebar = ({ user, tasks }) => {
         navigate(`/workspace/${workspace._id}`, { replace: true });
     };
 
-    // Callback khi tạo workspace thành công
+    // Callback when workspace is created
     const handleWorkspaceCreated = (newWorkspace) => {
         setWorkspaces(prev => [...prev, newWorkspace]);
         setSelectedWorkspace(newWorkspace);
         setWorkspaceDropdownOpen(false);
+        navigate(`/workspace/${newWorkspace._id}`);
     };
 
-    // Callback khi tạo project thành công
+    // Callback when project is created
     const handleProjectCreated = (newProject) => {
         setProjects(prev => [...prev, newProject]);
         setIsProjectModalOpen(false);
-        // Navigate to project detail
         navigate(`/workspace/${selectedWorkspace._id}/project/${newProject._id}`);
     };
 
@@ -131,13 +143,12 @@ const Sidebar = ({ user, tasks }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [workspaceDropdownOpen]);
 
-    // Calculate pending tasks (chỉ task chưa hoàn thành)
+    // Calculate pending tasks
     const pendingTasks = tasks?.filter(task => task.status !== 'completed').length || 0;
 
     return (
         <>
-            <div className="fixed left-0 top-16 bottom-0 w-16 md:w-64 bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 z-40
-            flex flex-col shadow-lg">
+            <div className="fixed left-0 top-16 bottom-0 w-16 md:w-64 bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 z-40 flex flex-col shadow-lg">
                 
                 {/* User Greeting Section */}
                 <div className="p-3 md:p-4 border-b border-gray-100 flex items-center gap-3">
@@ -188,7 +199,7 @@ const Sidebar = ({ user, tasks }) => {
                         {/* Workspace Dropdown List */}
                         {workspaceDropdownOpen && (
                             <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 shadow-xl rounded-xl z-50 max-h-64 overflow-y-auto">
-                                {/* Nút tạo workspace mới */}
+                                {/* Create workspace button */}
                                 <div className="sticky top-0 bg-white border-b border-gray-100 z-10">
                                     <button
                                         onClick={() => {
@@ -253,7 +264,7 @@ const Sidebar = ({ user, tasks }) => {
                             Projects ({projects.length})
                         </div>
                         
-                        {/* Nút tạo project - Chỉ hiện khi có workspace được chọn */}
+                        {/* Create project button */}
                         {selectedWorkspace && (
                             <div className="sticky top-0 bg-white z-10">
                                 <button
@@ -323,7 +334,7 @@ const Sidebar = ({ user, tasks }) => {
                     {/* Quick Actions */}
                     <div className="border-t border-gray-100 pt-2 space-y-1">
                         
-                        {/* My Tasks - Chỉ hiển thị pending tasks */}
+                        {/* My Tasks */}
                         <Link 
                             to="/my-tasks" 
                             className="group flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-blue-50 transition-colors gap-3 rounded-lg mx-1 text-sm"
@@ -347,13 +358,15 @@ const Sidebar = ({ user, tasks }) => {
                         </Link>
 
                         {/* Settings */}
-                        <Link 
-                            to="/profile" 
-                            className="group flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-purple-50 transition-colors gap-3 rounded-lg mx-1 text-sm"
-                        >
-                            <Settings className="w-5 h-5 text-purple-500 flex-shrink-0" />
-                            <span className="font-medium text-gray-700 hidden md:inline">Settings</span>
-                        </Link>
+                        {selectedWorkspace && (
+                            <Link 
+                                to={`/workspace/${selectedWorkspace._id}/settings`} 
+                                className="group flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-purple-50 transition-colors gap-3 rounded-lg mx-1 text-sm"
+                            >
+                                <Settings className="w-5 h-5 text-purple-500 flex-shrink-0" />
+                                <span className="font-medium text-gray-700 hidden md:inline">Settings</span>
+                            </Link>
+                        )}
 
                         {/* Members */}
                         {selectedWorkspace && (

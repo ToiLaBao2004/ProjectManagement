@@ -3,9 +3,12 @@ import { Outlet, Route, Routes, useNavigate, useLocation } from "react-router-do
 import Layout from './components/Layout';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
-import WorkspacePage from './pages/WorkspacePage'; // New
-import ProjectPage from './pages/ProjectPage'; // New
-import MyTasksPage from './pages/MyTasksPage'; // New
+import WorkspacePage from './pages/WorkspacePage';
+import ProjectPage from './pages/ProjectPage';
+import MyTasksPage from './pages/MyTasksPage';
+import WorkspaceSettings from './pages/WorkspaceSettingPage'; // New
+import WorkspaceMembers from './pages/WorkspaceMembersPage'; // New
+import TaskDetail from './pages/TaskDetail'
 
 const App = () => {
     const navigate = useNavigate();
@@ -23,7 +26,7 @@ const App = () => {
         }
     }, [currentUser]);
 
-    // Kiểm tra token khi app khởi động
+    // Check token on app start
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token && location.pathname !== '/login' && location.pathname !== '/signup') {
@@ -31,7 +34,7 @@ const App = () => {
         }
     }, [navigate, location.pathname]);
 
-    // Xử lý Google callback
+    // Handle Google callback
     useEffect(() => {
         const urlParams = new URLSearchParams(location.search);
         const token = urlParams.get('token');
@@ -124,11 +127,12 @@ const App = () => {
             />
             <Route path='/' element={<ProtectedLayout />}>
                 <Route index element={<div>Home Page Content</div>} />
-                {/* New routes */}
                 <Route path="/workspace/:workspaceId" element={<WorkspacePage />} />
                 <Route path="/workspace/:workspaceId/project/:projectId" element={<ProjectPage />} />
-                <Route path="/tasks" element={<MyTasksPage />} />
-                {/* Add more routes if needed */}
+                <Route path="/workspace/:workspaceId/settings" element={<WorkspaceSettings />} />
+                <Route path="/workspace/:workspaceId/members" element={<WorkspaceMembers />} />
+                <Route path="/my-tasks" element={<MyTasksPage />} />
+                <Route path="/task/:taskId" element={<TaskDetail />} />
             </Route>
         </Routes>
     );

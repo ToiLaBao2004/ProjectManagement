@@ -159,17 +159,36 @@ export async function removeMember(req, res) {
     try {
         const { workspaceId } = req.params;
         const { userId } = req.body;
+
         const workspace = await Workspace.findById(workspaceId);
         if (!workspace) {
             return res.status(404).json({ success: false, message: "Workspace not found." });
         }
-        const isAdmin = workspace.members.some(member => member.user.toString() === req.user.id && member.role === 'admin');
+
+        // Kiểm tra người thực hiện có phải admin không
+        const isAdmin = workspace.members.some(
+            member => member.user.toString() === req.user.id && member.role === 'admin'
+        );
         if (!isAdmin) {
             return res.status(403).json({ success: false, message: "Only admins can remove members." });
         }
+
+        // Ngăn không cho xóa owner
+        if (workspace.owner.toString() === userId) {
+            return res.status(403).json({ success: false, message: "Cannot remove the workspace owner." });
+        }
+
+        // Xóa member
+        const initialLength = workspace.members.length;
         workspace.members = workspace.members.filter(member => member.user.toString() !== userId);
+
+        if (workspace.members.length === initialLength) {
+            return res.status(404).json({ success: false, message: "Member not found in workspace." });
+        }
+
         await workspace.save();
         res.status(200).json({ success: true, message: "Member removed." });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Server error." });
@@ -180,20 +199,38 @@ export async function updateMemberRole(req, res) {
     try {
         const { workspaceId } = req.params;
         const { userId, role } = req.body;
+
         const workspace = await Workspace.findById(workspaceId);
         if (!workspace) {
             return res.status(404).json({ success: false, message: 'Workspace not found.' });
         }
-        const isAdmin = workspace.members.some(member => member.user.toString() === req.user.id && member.role === 'admin');
+
+        // Kiểm tra người thực hiện có phải admin không
+        const isAdmin = workspace.members.some(
+            member => member.user.toString() === req.user.id && member.role === 'admin'
+        );
         if (!isAdmin) {
             return res.status(403).json({ success: false, message: 'Only admins can update member roles.' });
         }
-        const member = workspace.members.find(member => member.user.toString() === userId);
+
+        // Tìm member cần cập nhật
+        const member = workspace.members.find(
+            member => member.user.toString() === userId
+        );
         if (!member) {
             return res.status(404).json({ success: false, message: 'Member not found in workspace.' });
         }
+
+        // Ngăn không cho đổi role nếu member là owner và admin
+        const isOwner = workspace.owner.toString() === userId;
+        if (member.role === 'admin' && isOwner) {
+            return res.status(403).json({ success: false, message: 'Cannot change role of the workspace owner.' });
+        }
+
+        // Cập nhật role
         member.role = role;
         await workspace.save();
+
         res.status(200).json({ success: true, message: 'Member role updated.' });
     } catch (error) {
         console.log(error);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { CheckCircle, Clock, AlertTriangle, Briefcase, FileText } from 'lucide-react';
 
@@ -22,7 +22,6 @@ const MyTasksPage = () => {
                     navigate('/login');
                     return;
                 }
-
                 const res = await axios.get(`${API_URL}/task/assigner`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -39,7 +38,6 @@ const MyTasksPage = () => {
                 setLoading(false);
             }
         };
-
         fetchMyTasks();
     }, [navigate]);
 
@@ -47,6 +45,7 @@ const MyTasksPage = () => {
     const pendingTasks = tasks.filter(task => task.status !== 'completed').length;
     const completedTasks = tasks.length - pendingTasks;
     const totalTasks = tasks.length;
+    const highPriorityTasks = tasks.filter(task => task.priority === 'high').length;
 
     if (loading) {
         return (
@@ -65,56 +64,64 @@ const MyTasksPage = () => {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="max-w-4xl mx-auto p-6 space-y-6">
             {/* Header */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">My Tasks</h2>
-                <p className="text-gray-600">Manage all tasks assigned to you across projects</p>
-            </div>
-
-            {/* Task Stats */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Task Statistics</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div className="p-4 border border-gray-200 rounded-lg text-center">
-                        <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
-                        <p className="text-2xl font-bold text-green-600">{completedTasks}</p>
-                        <p className="text-gray-600">Completed</p>
-                    </div>
-                    <div className="p-4 border border-gray-200 rounded-lg text-center">
-                        <Clock className="w-8 h-8 text-orange-500 mx-auto mb-2" />
-                        <p className="text-2xl font-bold text-orange-600">{pendingTasks}</p>
-                        <p className="text-gray-600">Pending</p>
-                    </div>
-                    <div className="p-4 border border-gray-200 rounded-lg text-center">
-                        <AlertTriangle className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <FileText className="w-6 h-6 text-blue-600" />
+                    My Tasks
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                            <Briefcase className="w-5 h-5 text-blue-600" />
+                            <span className="text-sm font-medium text-gray-700">Total Tasks</span>
+                        </div>
                         <p className="text-2xl font-bold text-blue-600">{totalTasks}</p>
-                        <p className="text-gray-600">Total Tasks</p>
+                    </div>
+                    <div className="bg-green-50 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                            <CheckCircle className="w-5 h-5 text-green-600" />
+                            <span className="text-sm font-medium text-gray-700">Completed</span>
+                        </div>
+                        <p className="text-2xl font-bold text-green-600">{completedTasks}</p>
+                    </div>
+                    <div className="bg-orange-50 p-4 rounded-lg">
+                        <div className="flex items-center gap-2 mb-2">
+                            <AlertTriangle className="w-5 h-5 text-orange-600" />
+                            <span className="text-sm font-medium text-gray-700">High Priority</span>
+                        </div>
+                        <p className="text-2xl font-bold text-orange-600">{highPriorityTasks}</p>
                     </div>
                 </div>
             </div>
 
-            {/* Tasks List */}
+            {/* Task List */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Tasks List</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Task List</h3>
                 {tasks.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
                         <FileText className="w-12 h-12 mx-auto mb-2 text-gray-400" />
-                        <p>No tasks assigned to you. Check your projects for new tasks!</p>
+                        <p>No tasks assigned to you.</p>
                     </div>
                 ) : (
                     <div className="space-y-4">
                         {tasks.map(task => (
-                            <div key={task._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                            <div
+                                key={task._id}
+                                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                                onClick={() => navigate(`/task/${task._id}`)}
+                            >
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2">
                                             <h4 className="font-bold text-gray-900">{task.title}</h4>
-                                            <span className={`px-2 py-1 text-xs rounded-full ${
-                                                task.status === 'completed' 
-                                                    ? 'bg-green-100 text-green-700' 
-                                                    : 'bg-orange-100 text-orange-700'
-                                            }`}>
+                                            <span
+                                                className={`px-2 py-1 text-xs rounded-full ${task.status === 'completed'
+                                                        ? 'bg-green-100 text-green-700'
+                                                        : 'bg-orange-100 text-orange-700'
+                                                    }`}
+                                            >
                                                 {task.status}
                                             </span>
                                         </div>
@@ -125,7 +132,7 @@ const MyTasksPage = () => {
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <span className="text-xs text-gray-500">Project:</span>
-                                            <Link 
+                                            <Link
                                                 to={`/workspace/${task.project?.workspace}/project/${task.project?._id}`}
                                                 className="text-xs text-blue-600 hover:text-blue-700 font-medium"
                                             >
