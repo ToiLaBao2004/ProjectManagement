@@ -207,11 +207,6 @@ const ProjectPage = () => {
     const mediumPriorityTasks = tasks.filter(task => task.priority === 'medium').length;
     const highPriorityTasks = tasks.filter(task => task.priority === 'high').length;
     const overdueTasks = tasks.filter(task => task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed').length;
-    const tasksByOwner = tasks.reduce((acc, task) => {
-        const ownerName = task.owner?.name || 'Unknown';
-        acc[ownerName] = (acc[ownerName] || 0) + 1;
-        return acc;
-    }, {});
 
     // Filtered tasks based on status
     const filteredTasks = taskFilter === 'all'
@@ -304,21 +299,6 @@ const ProjectPage = () => {
                         <p className="text-2xl font-bold text-red-600">{overdueTasks}</p>
                         <p className="text-gray-600">Overdue</p>
                     </div>
-                </div>
-                <div className="border-t border-gray-200 pt-4">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tasks by Owner</h4>
-                    {Object.keys(tasksByOwner).length === 0 ? (
-                        <p className="text-gray-500">No tasks assigned.</p>
-                    ) : (
-                        <div className="space-y-2">
-                            {Object.entries(tasksByOwner).map(([owner, count]) => (
-                                <div key={owner} className="flex items-center justify-between text-sm text-gray-600">
-                                    <span>{owner}</span>
-                                    <span className="font-medium">{count} task{count > 1 ? 's' : ''}</span>
-                                </div>
-                            ))}
-                        </div>
-                    )}
                 </div>
             </div>
 

@@ -9,6 +9,7 @@ import MyTasksPage from './pages/MyTasksPage';
 import WorkspaceSettings from './pages/WorkspaceSettingPage'; // New
 import WorkspaceMembers from './pages/WorkspaceMembersPage'; // New
 import TaskDetail from './pages/TaskDetail'
+import Profile from "./pages/Profile";
 
 const App = () => {
     const navigate = useNavigate();
@@ -133,6 +134,7 @@ const App = () => {
                 <Route path="/workspace/:workspaceId/members" element={<WorkspaceMembers />} />
                 <Route path="/my-tasks" element={<MyTasksPage />} />
                 <Route path="/task/:taskId" element={<TaskDetail />} />
+                <Route path="/profile" element={<Profile />} />
             </Route>
         </Routes>
     );

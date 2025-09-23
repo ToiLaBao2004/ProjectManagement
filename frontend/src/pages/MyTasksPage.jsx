@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { CheckCircle, Clock, AlertTriangle, Briefcase, FileText } from 'lucide-react';
+import { CheckCircle, Clock, AlertTriangle, Briefcase, FileText, Filter } from 'lucide-react';
 
 const API_URL = "http://localhost:4000";
 
@@ -10,6 +10,7 @@ const MyTasksPage = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [taskFilter, setTaskFilter] = useState('all'); // State for task status filter
 
     // Fetch my tasks
     useEffect(() => {
@@ -46,6 +47,11 @@ const MyTasksPage = () => {
     const completedTasks = tasks.length - pendingTasks;
     const totalTasks = tasks.length;
     const highPriorityTasks = tasks.filter(task => task.priority === 'high').length;
+
+    // Filtered tasks based on status
+    const filteredTasks = taskFilter === 'all'
+        ? tasks
+        : tasks.filter(task => task.status === taskFilter);
 
     if (loading) {
         return (
@@ -98,15 +104,30 @@ const MyTasksPage = () => {
 
             {/* Task List */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">Task List</h3>
-                {tasks.length === 0 ? (
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xl font-bold text-gray-900">Task List</h3>
+                    <div className="flex items-center gap-2">
+                        <Filter className="w-4 h-4 text-gray-600" />
+                        <select
+                            value={taskFilter}
+                            onChange={(e) => setTaskFilter(e.target.value)}
+                            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="all">All Tasks</option>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                {filteredTasks.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
                         <FileText className="w-12 h-12 mx-auto mb-2 text-gray-400" />
-                        <p>No tasks assigned to you.</p>
+                        <p>No tasks found for this filter.</p>
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        {tasks.map(task => (
+                        {filteredTasks.map(task => (
                             <div
                                 key={task._id}
                                 className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
