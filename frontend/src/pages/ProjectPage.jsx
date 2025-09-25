@@ -351,6 +351,7 @@ const ProjectPage = () => {
                                             <span>Priority: {task.priority || 'Medium'}</span>
                                             <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
                                             <span>Assigned by: {task.owner?.name || 'Unknown'}</span>
+                                            <span>Sprint: {task.sprint?.name || 'No sprint'}</span>
                                         </div>
                                     </div>
                                     <button
@@ -381,7 +382,7 @@ const ProjectPage = () => {
                 ) : (
                     <div className="space-y-4">
                         {sprints.map(sprint => (
-                            <div key={sprint.name} className="border border-gray-200 rounded-lg p-4">
+                            <div key={sprint._id} className="border border-gray-200 rounded-lg p-4">
                                 <h4 className="font-bold text-gray-900 mb-2">{sprint.name}</h4>
                                 <div className="flex items-center gap-4 text-sm text-gray-600">
                                     <span>Start: {new Date(sprint.startDate).toLocaleDateString()}</span>

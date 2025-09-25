@@ -228,6 +228,10 @@ const Navbar = ({ user = {}, onLogout }) => {
                                                     if (!notification.isRead) {
                                                         markAsRead(notification._id);
                                                     }
+                                                    if (notification.task) {
+        navigate(`/task/${notification.task}`); // 👈 chuyển đến trang task detail
+        setNotificationOpen(false); // đóng dropdown sau khi click
+      }
                                                 }}
                                             >
                                                 <div className='flex items-start gap-3'>

@@ -23,7 +23,7 @@ const MyTasksPage = () => {
                     navigate('/login');
                     return;
                 }
-                const res = await axios.get(`${API_URL}/task/assigner`, {
+                const res = await axios.get(`${API_URL}/task/task/assigner`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setTasks(res.data.tasks || []);

@@ -5,23 +5,27 @@ import axios from 'axios';
 const API_URL = "http://localhost:4000";
 
 const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, projectName }) => {
-    const [formData, setFormData] = useState({ 
-        title: '', 
-        description: '', 
-        priority: 'medium', 
-        status: 'pending', 
+    const [formData, setFormData] = useState({
+        title: '',
+        description: '',
+        priority: 'medium',
+        status: 'pending',
         dueDate: '',
-        assigner: ''
+        assigner: '',
+        sprintId: ''
     });
     const [projectMembers, setProjectMembers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [loadingMembers, setLoadingMembers] = useState(false);
     const [message, setMessage] = useState({ text: '', type: '' });
     const [showMembersDropdown, setShowMembersDropdown] = useState(false);
+    const [sprints, setSprints] = useState([]);
+    const [loadingSprints, setLoadingSprints] = useState(false);
 
     useEffect(() => {
         if (isOpen && projectId) {
             fetchProjectMembers();
+            fetchProjectSprints();
         }
     }, [isOpen, projectId]);
 
@@ -35,8 +39,8 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
             const members = data.project?.members || [];
             setProjectMembers(members);
 
-            const currentUserId = localStorage.getItem('currentUser') 
-                ? JSON.parse(localStorage.getItem('currentUser')).id 
+            const currentUserId = localStorage.getItem('currentUser')
+                ? JSON.parse(localStorage.getItem('currentUser')).id
                 : null;
             if (currentUserId && !formData.assigner) {
                 setFormData(prev => ({ ...prev, assigner: currentUserId }));
@@ -45,6 +49,30 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
             console.error('Error fetching project members:', error);
         } finally {
             setLoadingMembers(false);
+        }
+    };
+
+    const fetchProjectSprints = async () => {
+        setLoadingSprints(true);
+        try {
+            const token = localStorage.getItem('token');
+            const { data } = await axios.get(`${API_URL}/workspace/${workspaceId}/project/${projectId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const today = new Date();
+            const projectSprints = data.project?.sprints || [];
+            const activeSprints = projectSprints.filter(sprint => {
+                const start = new Date(sprint.startDate);
+                const end = new Date(sprint.endDate);
+                return start <= today && today <= end;
+            });
+
+            setSprints(activeSprints);
+        } catch (error) {
+            console.error("Error fetching sprints:", error);
+        } finally {
+            setLoadingSprints(false);
         }
     };
 
@@ -65,7 +93,8 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                     priority: formData.priority,
                     status: formData.status,
                     dueDate: formData.dueDate,
-                    assigner: formData.assigner
+                    assigner: formData.assigner,
+                    sprintId: formData.sprintId || null
                 },
                 { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
             );
@@ -112,13 +141,13 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
         setShowMembersDropdown(false);
     };
 
-    const currentUserId = localStorage.getItem('currentUser') 
-        ? JSON.parse(localStorage.getItem('currentUser')).id 
+    const currentUserId = localStorage.getItem('currentUser')
+        ? JSON.parse(localStorage.getItem('currentUser')).id
         : null;
 
     const selectedMember = projectMembers.find(member => member.user._id === formData.assigner);
-    const displayAssigner = selectedMember 
-        ? selectedMember.user.name || selectedMember.user.email 
+    const displayAssigner = selectedMember
+        ? selectedMember.user.name || selectedMember.user.email
         : 'Select a member';
 
     if (!isOpen) return null;
@@ -126,14 +155,14 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
             {/* Overlay */}
-            <div 
-                className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity" 
-                onClick={onClose} 
+            <div
+                className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity"
+                onClick={onClose}
             />
 
             {/* Modal */}
             <div className="relative bg-white/90 backdrop-blur-md rounded-3xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl pointer-events-auto border border-white/30">
-                
+
                 {/* Header */}
                 <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-200 rounded-t-3xl p-6">
                     <div className="flex items-center justify-between">
@@ -158,9 +187,8 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
 
                 {/* Message */}
                 {message.text && (
-                    <div className={`mx-6 mt-4 p-3 rounded-xl text-sm font-medium ${
-                        message.type === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'
-                    }`}>
+                    <div className={`mx-6 mt-4 p-3 rounded-xl text-sm font-medium ${message.type === 'success' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'
+                        }`}>
                         {message.text}
                     </div>
                 )}
@@ -320,6 +348,26 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                             )}
                         </div>
                         <p className="text-xs text-gray-500 mt-1">Select a member to assign the task (default is you)</p>
+                    </div>
+
+                    {/* Sprint Selection */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Sprint (optional)</label>
+                        <select
+                            name="sprintId"
+                            value={formData.sprintId}
+                            onChange={handleInputChange}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
+                            disabled={loading || loadingSprints}
+                        >
+                            <option value="">-- No Sprint --</option>
+                            {sprints.map(sprint => (
+                                <option key={sprint._id} value={sprint._id}>
+                                    {sprint.name} ({new Date(sprint.startDate).toLocaleDateString()} - {new Date(sprint.endDate).toLocaleDateString()})
+                                </option>
+                            ))}
+                        </select>
+                        {loadingSprints && <p className="text-xs text-gray-500 mt-1">Loading sprints...</p>}
                     </div>
 
                     {/* Actions */}

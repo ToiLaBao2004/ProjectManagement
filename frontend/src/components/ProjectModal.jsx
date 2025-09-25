@@ -23,7 +23,7 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
             );
 
             setMessage({ 
-                text: 'Project đã được tạo thành công!', 
+                text: 'Project has been created successfully!', 
                 type: 'success' 
             });
 
@@ -36,7 +36,7 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
         } catch (error) {
             console.error('Error creating project:', error);
             setMessage({
-                text: error.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại.',
+                text: error.response?.data?.message || 'An error occurred. Please try again.',
                 type: 'error'
             });
         } finally {
@@ -48,7 +48,7 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
-            {/* Overlay trong suốt */}
+            {/* Overlay */}
             <div 
                 className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity" 
                 onClick={onClose} 
@@ -65,9 +65,9 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
                                 <FileText className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-900">Tạo Project Mới</h3>
+                                <h3 className="text-xl font-bold text-gray-900">Create New Project</h3>
                                 <p className="text-sm text-gray-600">
-                                    Tạo project mới trong <span className="font-medium">{workspaceName}</span>
+                                    Create a new project in <span className="font-medium">{workspaceName}</span>
                                 </p>
                             </div>
                         </div>
@@ -96,7 +96,7 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
                     {/* Project Name */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Tên Project <span className="text-red-500">*</span>
+                            Project Name <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -104,7 +104,7 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
                             </div>
                             <input
                                 type="text"
-                                placeholder="Nhập tên project..."
+                                placeholder="Enter project name..."
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm"
@@ -117,12 +117,12 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
                     {/* Description */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Mô tả (tùy chọn)
+                            Description (optional)
                         </label>
                         <div className="relative">
                             <textarea
                                 rows={3}
-                                placeholder="Mô tả về project của bạn..."
+                                placeholder="Enter a description for your project..."
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm resize-none"
@@ -139,7 +139,7 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
                             className="flex-1 py-3 px-4 border border-gray-300 rounded-2xl text-gray-700 font-medium hover:bg-gray-100 transition-all disabled:opacity-50"
                             disabled={loading}
                         >
-                            Hủy
+                            Cancel
                         </button>
                         <button
                             type="submit"
@@ -149,12 +149,12 @@ const ProjectModal = ({ isOpen, onClose, onProjectCreated, workspaceId, workspac
                             {loading ? (
                                 <>
                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    Đang tạo...
+                                    Creating...
                                 </>
                             ) : (
                                 <>
                                     <Plus className="w-4 h-4" />
-                                    Tạo Project
+                                    Create Project
                                 </>
                             )}
                         </button>

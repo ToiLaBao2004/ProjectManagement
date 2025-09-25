@@ -29,7 +29,7 @@ const TaskDetail = () => {
                 navigate('/login');
                 return;
             }
-            const res = await axios.get(`${API_URL}/task/${taskId}`, {
+            const res = await axios.get(`${API_URL}/task/task/${taskId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             const taskData = res.data.task;
@@ -42,6 +42,7 @@ const TaskDetail = () => {
                 dueDate: taskData.dueDate
                     ? new Date(taskData.dueDate).toISOString().split('T')[0]
                     : '',
+                sprint: taskData.sprint?._id || ''
             });
         } catch (err) {
             console.error('Error fetching task:', err);
@@ -151,6 +152,7 @@ const TaskDetail = () => {
                     <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
                     <span>Assigned by: {task.owner?.name || 'Unknown'}</span>
                     <span>Project: {task.project?.name || 'Unknown Project'}</span>
+                    <span>Sprint: {task.sprint?.name || 'Unknown'}</span>
                 </div>
             </div>
 
@@ -312,6 +314,22 @@ const TaskDetail = () => {
                                     onChange={handleEditChange}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                                 />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Sprint</label>
+                                <select
+                                    name="sprint"
+                                    value={editForm.sprint}
+                                    onChange={handleEditChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">No sprint</option>
+                                    {task.project?.sprints?.map((s) => (
+                                        <option key={s._id} value={s._id}>
+                                            {s.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="flex gap-2 mt-4">
                                 <button type="button" onClick={() => setIsEditModalOpen(false)}

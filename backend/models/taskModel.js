@@ -5,7 +5,7 @@ import NotificationModel from './notificationModel.js';
 
 const taskSchema = new mongoose.Schema({
     project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
-    sprint: { type: mongoose.Schema.Types.ObjectId, ref: 'Sprint' },
+    sprint: { type: mongoose.Schema.Types.ObjectId},
     title: { type: String, required: true },
     description: { type: String },
     priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },

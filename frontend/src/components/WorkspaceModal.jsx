@@ -23,7 +23,7 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
             );
 
             setMessage({ 
-                text: 'Workspace đã được tạo thành công!', 
+                text: 'Workspace has been created successfully!', 
                 type: 'success' 
             });
 
@@ -36,7 +36,7 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
         } catch (error) {
             console.error('Error creating workspace:', error);
             setMessage({
-                text: error.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại.',
+                text: error.response?.data?.message || 'An error occurred. Please try again.',
                 type: 'error'
             });
         } finally {
@@ -48,7 +48,7 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
-            {/* Overlay trong suốt nhưng vẫn mờ nhẹ */}
+            {/* Overlay */}
             <div 
                 className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-opacity" 
                 onClick={onClose} 
@@ -65,8 +65,8 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
                                 <Building2 className="w-6 h-6 text-white" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-900">Tạo Workspace Mới</h3>
-                                <p className="text-sm text-gray-600">Tạo không gian làm việc mới cho đội nhóm của bạn</p>
+                                <h3 className="text-xl font-bold text-gray-900">Create New Workspace</h3>
+                                <p className="text-sm text-gray-600">Set up a new workspace for your team</p>
                             </div>
                         </div>
                         <button
@@ -94,7 +94,7 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
                     {/* Workspace Name */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Tên Workspace <span className="text-red-500">*</span>
+                            Workspace Name <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -102,7 +102,7 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
                             </div>
                             <input
                                 type="text"
-                                placeholder="Nhập tên workspace..."
+                                placeholder="Enter workspace name..."
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm"
@@ -115,12 +115,12 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
                     {/* Description */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Mô tả (tùy chọn)
+                            Description (optional)
                         </label>
                         <div className="relative">
                             <textarea
                                 rows={3}
-                                placeholder="Mô tả về workspace của bạn..."
+                                placeholder="Enter a description for your workspace..."
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white/70 backdrop-blur-sm resize-none"
@@ -137,7 +137,7 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
                             className="flex-1 py-3 px-4 border border-gray-300 rounded-2xl text-gray-700 font-medium hover:bg-gray-100 transition-all disabled:opacity-50"
                             disabled={loading}
                         >
-                            Hủy
+                            Cancel
                         </button>
                         <button
                             type="submit"
@@ -147,12 +147,12 @@ const WorkspaceModal = ({ isOpen, onClose, onWorkspaceCreated }) => {
                             {loading ? (
                                 <>
                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    Đang tạo...
+                                    Creating...
                                 </>
                             ) : (
                                 <>
                                     <Plus className="w-4 h-4" />
-                                    Tạo Workspace
+                                    Create Workspace
                                 </>
                             )}
                         </button>
