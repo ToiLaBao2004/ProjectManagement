@@ -340,8 +340,8 @@ const ProjectPage = () => {
                                         <div className="flex items-center gap-2 mb-2">
                                             <h4 className="font-bold text-gray-900">{task.title}</h4>
                                             <span className={`px-2 py-1 text-xs rounded-full ${task.status === 'completed'
-                                                    ? 'bg-green-100 text-green-700'
-                                                    : 'bg-orange-100 text-orange-700'
+                                                ? 'bg-green-100 text-green-700'
+                                                : 'bg-orange-100 text-orange-700'
                                                 }`}>
                                                 {task.status}
                                             </span>
@@ -382,12 +382,23 @@ const ProjectPage = () => {
                 ) : (
                     <div className="space-y-4">
                         {sprints.map(sprint => (
-                            <div key={sprint._id} className="border border-gray-200 rounded-lg p-4">
+                            <div
+                                key={sprint._id}
+                                className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer"
+                                onClick={() => navigate(`/task/sprint/${sprint._id}`)}
+                            >
                                 <h4 className="font-bold text-gray-900 mb-2">{sprint.name}</h4>
                                 <div className="flex items-center gap-4 text-sm text-gray-600">
                                     <span>Start: {new Date(sprint.startDate).toLocaleDateString()}</span>
                                     <span>End: {new Date(sprint.endDate).toLocaleDateString()}</span>
-                                    <span>Duration: {Math.ceil((new Date(sprint.endDate) - new Date(sprint.startDate)) / (1000 * 60 * 60 * 24))} days</span>
+                                    <span>
+                                        Duration:{" "}
+                                        {Math.ceil(
+                                            (new Date(sprint.endDate) - new Date(sprint.startDate)) /
+                                            (1000 * 60 * 60 * 24)
+                                        )}{" "}
+                                        days
+                                    </span>
                                 </div>
                             </div>
                         ))}

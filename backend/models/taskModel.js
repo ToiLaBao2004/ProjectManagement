@@ -13,7 +13,6 @@ const taskSchema = new mongoose.Schema({
     dueDate: { type: Date },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     assigner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    completed: { type: Boolean, default: false },
     comments: [commentSchema],
     history: [historySchema],
 }, { timestamps: true });

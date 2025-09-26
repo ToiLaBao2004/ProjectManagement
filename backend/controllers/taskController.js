@@ -373,37 +373,37 @@ export async function deleteTask(req, res) {
 
 export async function getTasksBySprint(req, res) {
     try {
-        const { projectId, sprintId } = req.params;
+        const { sprintId } = req.params;
 
-        if (!mongoose.Types.ObjectId.isValid(projectId) ||
-            !mongoose.Types.ObjectId.isValid(sprintId)) {
-            return res.status(400).json({ success: false, message: 'Invalid IDs provided.' });
+        if (!mongoose.Types.ObjectId.isValid(sprintId)) {
+            return res.status(400).json({ success: false, message: 'Invalid sprintId.' });
         }
 
-        const project = await Project.findById(projectId).lean();
-        if (!project) {
-            return res.status(404).json({ success: false, message: 'Project not found.' });
-        }
-
-        const sprint = project.sprints.find(s => s._id.toString() === sprintId);
-        if (!sprint) {
-            return res.status(404).json({ success: false, message: 'Sprint not found in project.' });
-        }
-
-        const tasks = await Task.find({ project: projectId, sprint: sprintId })
+        // Lấy tất cả task của sprint
+        const tasks = await Task.find({ sprint: sprintId })
             .populate('owner', 'name email')
             .populate('assigner', 'name email')
-            .populate('project', 'name workspace')
+            .populate('project', 'name workspace sprints') // cần sprints để tìm tên
             .lean();
 
-        const tasksWithSprint = tasks.map(task => ({
-            ...task,
-            sprint: { _id: sprint._id.toString(), name: sprint.name }
-        }));
+        if (!tasks.length) {
+            return res.status(200).json({ success: true, sprintName: null, tasks: [] });
+        }
 
-        res.status(200).json({ success: true, tasks: tasksWithSprint });
+        // Lấy sprint name từ project.sprints (chỉ cần tìm 1 lần)
+        const project = tasks[0].project;
+        const sprintObj = project?.sprints?.find(s => s._id.toString() === sprintId);
+
+        const sprintName = sprintObj ? sprintObj.name : null;
+
+        return res.status(200).json({
+            success: true,
+            sprintName,
+            tasks
+        });
+
     } catch (error) {
         console.error('Error in getTasksBySprint:', error);
-        res.status(500).json({ success: false, message: 'Server error' });
+        return res.status(500).json({ success: false, message: 'Server error' });
     }
 }

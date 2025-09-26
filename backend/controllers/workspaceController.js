@@ -116,7 +116,7 @@ export async function acceptInvite(req, res) {
         // Check user tồn tại chưa
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
-            return res.json({ success: true, message: "Redirect to Google login to complete invite", email });
+            return res.redirect(`${process.env.FRONTEND_URL}/login?inviteToken=${encodeURIComponent(token)}`);
         }
 
         // Add vào members nếu chưa có
@@ -126,7 +126,7 @@ export async function acceptInvite(req, res) {
             await workspace.save();
         }
 
-        return res.json({ success: true, message: "Joined workspace successfully" });
+        return res.redirect(`${process.env.FRONTEND_URL}/workspace/${workspaceId}`);
     } catch (error) {
         console.error(error);
         return res.status(400).json({ success: false, message: "Invalid or expired token" });
