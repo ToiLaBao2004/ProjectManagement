@@ -12,6 +12,6 @@ const notificationSchema = new mongoose.Schema({
 // Index để query nhanh theo user
 notificationSchema.index({ user: 1, isRead: 1 });
 
-const NotificationModel = mongoose.model.Notification || mongoose.model('Notification', notificationSchema);
+const NotificationModel = mongoose.models.Notification || mongoose.model('Notification', notificationSchema);
 
 export default NotificationModel;

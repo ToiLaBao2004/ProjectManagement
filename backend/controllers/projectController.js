@@ -320,7 +320,7 @@ export async function deleteProject(req, res) {
             });
         }
 
-        await Project.findByIdAndDelete(projectId);
+        await Project.deleteOne();
 
         res.status(200).json({ success: true, message: 'Project deleted successfully.' });
     } catch (error) {
