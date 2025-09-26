@@ -207,11 +207,6 @@ const ProjectPage = () => {
     const mediumPriorityTasks = tasks.filter(task => task.priority === 'medium').length;
     const highPriorityTasks = tasks.filter(task => task.priority === 'high').length;
     const overdueTasks = tasks.filter(task => task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed').length;
-    const tasksByOwner = tasks.reduce((acc, task) => {
-        const ownerName = task.owner?.name || 'Unknown';
-        acc[ownerName] = (acc[ownerName] || 0) + 1;
-        return acc;
-    }, {});
 
     // Filtered tasks based on status
     const filteredTasks = taskFilter === 'all'
@@ -305,21 +300,6 @@ const ProjectPage = () => {
                         <p className="text-gray-600">Overdue</p>
                     </div>
                 </div>
-                <div className="border-t border-gray-200 pt-4">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">Tasks by Owner</h4>
-                    {Object.keys(tasksByOwner).length === 0 ? (
-                        <p className="text-gray-500">No tasks assigned.</p>
-                    ) : (
-                        <div className="space-y-2">
-                            {Object.entries(tasksByOwner).map(([owner, count]) => (
-                                <div key={owner} className="flex items-center justify-between text-sm text-gray-600">
-                                    <span>{owner}</span>
-                                    <span className="font-medium">{count} task{count > 1 ? 's' : ''}</span>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
             </div>
 
             {/* Tasks List */}
@@ -360,8 +340,8 @@ const ProjectPage = () => {
                                         <div className="flex items-center gap-2 mb-2">
                                             <h4 className="font-bold text-gray-900">{task.title}</h4>
                                             <span className={`px-2 py-1 text-xs rounded-full ${task.status === 'completed'
-                                                    ? 'bg-green-100 text-green-700'
-                                                    : 'bg-orange-100 text-orange-700'
+                                                ? 'bg-green-100 text-green-700'
+                                                : 'bg-orange-100 text-orange-700'
                                                 }`}>
                                                 {task.status}
                                             </span>
@@ -371,6 +351,7 @@ const ProjectPage = () => {
                                             <span>Priority: {task.priority || 'Medium'}</span>
                                             <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
                                             <span>Assigned by: {task.owner?.name || 'Unknown'}</span>
+                                            <span>Sprint: {task.sprint?.name || 'No sprint'}</span>
                                         </div>
                                     </div>
                                     <button
@@ -401,12 +382,23 @@ const ProjectPage = () => {
                 ) : (
                     <div className="space-y-4">
                         {sprints.map(sprint => (
-                            <div key={sprint.name} className="border border-gray-200 rounded-lg p-4">
+                            <div
+                                key={sprint._id}
+                                className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow cursor-pointer"
+                                onClick={() => navigate(`/task/sprint/${sprint._id}`)}
+                            >
                                 <h4 className="font-bold text-gray-900 mb-2">{sprint.name}</h4>
                                 <div className="flex items-center gap-4 text-sm text-gray-600">
                                     <span>Start: {new Date(sprint.startDate).toLocaleDateString()}</span>
                                     <span>End: {new Date(sprint.endDate).toLocaleDateString()}</span>
-                                    <span>Duration: {Math.ceil((new Date(sprint.endDate) - new Date(sprint.startDate)) / (1000 * 60 * 60 * 24))} days</span>
+                                    <span>
+                                        Duration:{" "}
+                                        {Math.ceil(
+                                            (new Date(sprint.endDate) - new Date(sprint.startDate)) /
+                                            (1000 * 60 * 60 * 24)
+                                        )}{" "}
+                                        days
+                                    </span>
                                 </div>
                             </div>
                         ))}

@@ -79,11 +79,20 @@ export async function loginUser(req, res) {
 // Get current user
 export async function getCurrentUser(req, res) {
     try {
-        const user = await User.findById(req.user.id).select('-password');
+        const user = await User.findById(req.user.id).select('name email password');
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found.' });
         }
-        res.status(200).json({ success: true, user });
+        const isGoogleUser = user.password === 'google_oauth2';
+        res.status(200).json({ 
+            success: true, 
+            user: { 
+                id: user._id, 
+                name: user.name, 
+                email: user.email, 
+                isGoogleUser 
+            } 
+        });
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: 'Server error.' });

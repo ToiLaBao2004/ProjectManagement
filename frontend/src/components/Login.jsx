@@ -14,6 +14,7 @@ const Login = ({ onSwitchMode, onLogin }) => {
     const [message, setMessage] = useState({ text: "", type: "" });
     const navigate = useNavigate();
 
+    // Login.jsx
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -22,17 +23,31 @@ const Login = ({ onSwitchMode, onLogin }) => {
         try {
             const { data } = await axios.post(`${API_URL}/user/login`, formData);
 
-            // Lưu token vào localStorage
             localStorage.setItem("token", data.token);
-
-            // Gọi callback để set user trong App.jsx
             if (onLogin) {
                 onLogin(data.user);
             }
-
             setMessage({ text: "Login successful!", type: "success" });
 
-            // Navigate về home
+            // Sau khi login thành công
+            const inviteToken = localStorage.getItem("inviteToken");
+            if (inviteToken) {
+                try {
+                    const res = await axios.get(`${API_URL}/workspace/invite/accept?token=${inviteToken}`, {
+                    headers: { Authorization: `Bearer ${data.token}` } // token login
+                    });
+
+                    localStorage.removeItem("inviteToken");
+
+                    if (res.data.success && res.data.workspaceId) {
+                    navigate(`/workspace/${res.data.workspaceId}`, { replace: true });
+                    return; // dừng, tránh redirect về "/"
+                    }
+                } catch (err) {
+                    console.error("Error accepting invite:", err);
+                }
+            }
+
             navigate("/", { replace: true });
         } catch (err) {
             console.error("Login error:", err);

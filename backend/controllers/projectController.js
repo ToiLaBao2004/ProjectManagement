@@ -1,5 +1,6 @@
 import Project from '../models/projectModel.js';
 import Workspace from '../models/workspaceModel.js';
+import Task from "../models/taskModel.js";
 
 export async function createProject(req, res) {
     try {
@@ -233,7 +234,11 @@ export async function addSprintToProject(req, res) {
         if (!name || !startDate || !endDate) {
             return res.status(400).json({ success: false, message: 'Name, startDate, and endDate are required.' });
         }
-        const sprint = { name, startDate, endDate };
+        const sprint = {
+            name,
+            startDate: new Date(startDate),
+            endDate: new Date(endDate)
+        };
         project.sprints.push(sprint);
         await project.save();
         res.status(200).json({ success: true, message: 'Sprint added to project.', project });
@@ -246,7 +251,7 @@ export async function addSprintToProject(req, res) {
 export async function removeSprintFromProject(req, res) {
     try {
         const { projectId } = req.params;
-        const { name } = req.body;
+        const { sprintId } = req.body;
         const project = await Project.findById(projectId);
         if (!project) {
             return res.status(404).json({ success: false, message: 'Project not found.' });
@@ -255,11 +260,15 @@ export async function removeSprintFromProject(req, res) {
         if (!isManager && project.owner.toString() !== req.user.id) {
             return res.status(403).json({ success: false, message: 'Only project managers can remove sprints.' });
         }
-        const sprint = project.sprints.find(sprint => sprint.name === name);
+        const sprint = project.sprints.id(sprintId);
         if (!sprint) {
             return res.status(404).json({ success: false, message: 'Sprint not found in project.' });
         }
-        project.sprints = project.sprints.filter(s => s.name !== name);
+        project.sprints.pull(sprintId);
+        await Task.updateMany(
+            { project: project._id, sprint: sprintId },
+            { $set: { sprint: null } }
+        );
         await project.save();
         res.status(200).json({ success: true, message: 'Sprint removed from project.', project });
     } catch (error) {
@@ -286,6 +295,36 @@ export async function updateProject(req, res) {
         res.status(200).json({ success: true, message: 'Project updated.', project });
     } catch (error) {
         console.log(error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+}
+
+export async function deleteProject(req, res) {
+    try {
+        const { projectId } = req.params;
+
+        const project = await Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({ success: false, message: 'Project not found.' });
+        }
+
+        // chỉ owner hoặc manager mới được xoá
+        const isManager = project.members.some(
+            (member) => member.user.toString() === req.user.id && member.role === 'manager'
+        );
+
+        if (!isManager && project.owner.toString() !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: 'Only project managers or the owner can delete this project.',
+            });
+        }
+
+        await Project.findByIdAndDelete(projectId);
+
+        res.status(200).json({ success: true, message: 'Project deleted successfully.' });
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 }

@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { CheckCircle, Clock, AlertTriangle, Briefcase, FileText, Filter } from 'lucide-react';
 
 const API_URL = "http://localhost:4000";
 
-const MyTasksPage = () => {
+const SprintPage = () => {
     const navigate = useNavigate();
+    const { projectId, sprintId } = useParams(); // Lấy projectId và sprintId từ URL
     const [tasks, setTasks] = useState([]);
+    const [sprintName, setSprintName] = useState(''); // Lưu tên sprint
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [taskFilter, setTaskFilter] = useState('all'); // State for task status filter
+    const [taskFilter, setTaskFilter] = useState('all'); // State cho bộ lọc trạng thái task
 
-    // Fetch my tasks
+    // Fetch tasks theo sprint
+    // Fetch tasks theo sprint
     useEffect(() => {
-        const fetchMyTasks = async () => {
+        const fetchSprintTasks = async () => {
             setLoading(true);
             setError(null);
             try {
@@ -23,12 +26,14 @@ const MyTasksPage = () => {
                     navigate('/login');
                     return;
                 }
-                const res = await axios.get(`${API_URL}/task/task/assigner`, {
-                    headers: { Authorization: `Bearer ${token}` }
+                const res = await axios.get(`${API_URL}/task/sprint/${sprintId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                    params: { projectId }
                 });
                 setTasks(res.data.tasks || []);
+                setSprintName(res.data.sprintName || 'Sprint'); // ✅ lấy sprintName từ API
             } catch (err) {
-                console.error('Error fetching my tasks:', err);
+                console.error('Error fetching sprint tasks:', err);
                 setError(err.response?.data?.message || 'Failed to load tasks.');
                 if (err.response?.status === 401) {
                     localStorage.removeItem('token');
@@ -39,16 +44,16 @@ const MyTasksPage = () => {
                 setLoading(false);
             }
         };
-        fetchMyTasks();
-    }, [navigate]);
+        fetchSprintTasks();
+    }, [navigate, projectId, sprintId]);
 
-    // Stats
+    // Thống kê
     const pendingTasks = tasks.filter(task => task.status !== 'completed').length;
     const completedTasks = tasks.length - pendingTasks;
     const totalTasks = tasks.length;
     const highPriorityTasks = tasks.filter(task => task.priority === 'high').length;
 
-    // Filtered tasks based on status
+    // Lọc tasks dựa trên trạng thái
     const filteredTasks = taskFilter === 'all'
         ? tasks
         : tasks.filter(task => task.status === taskFilter);
@@ -75,7 +80,7 @@ const MyTasksPage = () => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                 <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <FileText className="w-6 h-6 text-blue-600" />
-                    My Tasks
+                    {sprintName} Sprint Tasks
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="bg-blue-50 p-4 rounded-lg">
@@ -139,8 +144,8 @@ const MyTasksPage = () => {
                                             <h4 className="font-bold text-gray-900">{task.title}</h4>
                                             <span
                                                 className={`px-2 py-1 text-xs rounded-full ${task.status === 'completed'
-                                                        ? 'bg-green-100 text-green-700'
-                                                        : 'bg-orange-100 text-orange-700'
+                                                    ? 'bg-green-100 text-green-700'
+                                                    : 'bg-orange-100 text-orange-700'
                                                     }`}
                                             >
                                                 {task.status}
@@ -171,4 +176,4 @@ const MyTasksPage = () => {
     );
 };
 
-export default MyTasksPage;
+export default SprintPage;

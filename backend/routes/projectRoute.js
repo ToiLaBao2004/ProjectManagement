@@ -1,6 +1,6 @@
 import express from 'express';
 import { createProject, getProjects, getProjectById, addMemberToProject, editMemberRole, removeMemberFromProject, 
-    getSprintsOfProject, addSprintToProject, removeSprintFromProject, updateProject
+    getSprintsOfProject, addSprintToProject, removeSprintFromProject, updateProject, deleteProject
  } from '../controllers/projectController.js';
 import { authMiddleware } from '../middleware/auth.js';
 import taskRouter from './taskRoute.js';
@@ -17,6 +17,7 @@ projectRouter.get('/:projectId/sprints', authMiddleware, getSprintsOfProject);
 projectRouter.post('/:projectId/add-sprint', authMiddleware, addSprintToProject);
 projectRouter.put('/:projectId/remove-sprint', authMiddleware, removeSprintFromProject);
 projectRouter.put('/:projectId/update', authMiddleware, updateProject);
+projectRouter.delete('/:projectId', authMiddleware, deleteProject)
 
 projectRouter.use('/:projectId/task', taskRouter);
 

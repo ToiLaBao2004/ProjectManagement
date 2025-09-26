@@ -9,6 +9,10 @@ import MyTasksPage from './pages/MyTasksPage';
 import WorkspaceSettings from './pages/WorkspaceSettingPage'; // New
 import WorkspaceMembers from './pages/WorkspaceMembersPage'; // New
 import TaskDetail from './pages/TaskDetail'
+import Profile from "./pages/Profile";
+import ProjectSettings from "./pages/ProjectSettings";
+import SprintPage from "./pages/SprintPage"
+import Dashboard from "./pages/Dashboard"
 
 const App = () => {
     const navigate = useNavigate();
@@ -39,19 +43,42 @@ const App = () => {
         const urlParams = new URLSearchParams(location.search);
         const token = urlParams.get('token');
         const userData = urlParams.get('user');
-        
+
         if (token && userData) {
             try {
                 localStorage.setItem('token', token);
                 const user = JSON.parse(decodeURIComponent(userData));
                 setCurrentUser(user);
-                navigate('/', { replace: true });
+
+                // 🔹 Check invite token sau khi login bằng Google
+                const inviteToken = localStorage.getItem("inviteToken");
+                if (inviteToken) {
+                    axios.get(`${API_URL}/workspace/invite/accept?token=${inviteToken}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }).then(() => {
+                        localStorage.removeItem("inviteToken");
+                        navigate('/', { replace: true });
+                    });
+                } else {
+                    navigate('/', { replace: true });
+                }
             } catch (error) {
                 console.error('Error processing Google callback:', error);
                 navigate('/login', { replace: true });
             }
         }
     }, [location.search, navigate]);
+
+    // App.jsx
+    useEffect(() => {
+        const urlParams = new URLSearchParams(location.search);
+        const inviteToken = urlParams.get('inviteToken');
+        if (inviteToken) {
+            localStorage.setItem('inviteToken', inviteToken);
+            // Xóa param khỏi URL để gọn gàng
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location.search, location.pathname, navigate]);
 
     const handleAuthSubmit = (data) => {
         const user = {
@@ -126,13 +153,16 @@ const App = () => {
                 } 
             />
             <Route path='/' element={<ProtectedLayout />}>
-                <Route index element={<div>Home Page Content</div>} />
+                <Route index element={<Dashboard />} />
                 <Route path="/workspace/:workspaceId" element={<WorkspacePage />} />
                 <Route path="/workspace/:workspaceId/project/:projectId" element={<ProjectPage />} />
                 <Route path="/workspace/:workspaceId/settings" element={<WorkspaceSettings />} />
                 <Route path="/workspace/:workspaceId/members" element={<WorkspaceMembers />} />
                 <Route path="/my-tasks" element={<MyTasksPage />} />
                 <Route path="/task/:taskId" element={<TaskDetail />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/workspace/:workspaceId/project/:projectId/settings" element={<ProjectSettings />} />
+                <Route path="/task/sprint/:sprintId" element={<SprintPage />} />
             </Route>
         </Routes>
     );

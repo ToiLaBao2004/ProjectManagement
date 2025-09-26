@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { 
-    ChevronDown, 
-    Briefcase, 
-    CheckSquare, 
-    Settings, 
+import {
+    ChevronDown,
+    Briefcase,
+    CheckSquare,
+    Settings,
     Users,
     User,
-    Plus 
+    Plus
 } from 'lucide-react';
 import axios from 'axios';
 import WorkspaceModal from './WorkspaceModal';
@@ -41,9 +41,9 @@ const Sidebar = ({ user, tasks }) => {
                 const { data } = await axios.get(`${API_URL}/workspace/my`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                
+
                 setWorkspaces(data.workspaces || []);
-                
+
                 // Select workspace from URL or default to first workspace
                 if (workspaceId && data.workspaces.length > 0) {
                     const workspaceFromUrl = data.workspaces.find(ws => ws._id === workspaceId);
@@ -86,14 +86,14 @@ const Sidebar = ({ user, tasks }) => {
     useEffect(() => {
         const fetchProjects = async () => {
             if (!selectedWorkspace) return;
-            
+
             setLoadingProjects(true);
             try {
                 const token = localStorage.getItem('token');
                 const { data } = await axios.get(`${API_URL}/workspace/${selectedWorkspace._id}/project`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                
+
                 setProjects(data.projects || []);
             } catch (err) {
                 console.error('Error fetching projects:', err);
@@ -149,7 +149,7 @@ const Sidebar = ({ user, tasks }) => {
     return (
         <>
             <div className="fixed left-0 top-16 bottom-0 w-16 md:w-64 bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 z-40 flex flex-col shadow-lg">
-                
+
                 {/* User Greeting Section */}
                 <div className="p-3 md:p-4 border-b border-gray-100 flex items-center gap-3">
                     <div className="hidden md:block flex-1 min-w-0">
@@ -169,10 +169,10 @@ const Sidebar = ({ user, tasks }) => {
 
                 {/* Navigation Menu */}
                 <nav className="flex-1 py-2">
-                    
+
                     {/* Workspace Dropdown */}
                     <div className="relative sidebar-workspace-dropdown mb-2">
-                        <button 
+                        <button
                             onClick={() => setWorkspaceDropdownOpen(!workspaceDropdownOpen)}
                             className="flex items-center justify-between w-full px-3 py-3 md:px-4 md:py-4 hover:bg-gray-50 transition-colors rounded-lg mx-1"
                             title={selectedWorkspace ? selectedWorkspace.name : 'Select Workspace'}
@@ -263,7 +263,7 @@ const Sidebar = ({ user, tasks }) => {
                         <div className="px-3 py-2 text-xs font-medium text-gray-500 uppercase tracking-wide hidden md:block">
                             Projects ({projects.length})
                         </div>
-                        
+
                         {/* Create project button */}
                         {selectedWorkspace && (
                             <div className="sticky top-0 bg-white z-10">
@@ -281,7 +281,7 @@ const Sidebar = ({ user, tasks }) => {
                                 </button>
                             </div>
                         )}
-                        
+
                         {loadingProjects ? (
                             <div className="px-3 py-3">
                                 <div className="flex items-center gap-3 text-sm text-gray-500">
@@ -306,37 +306,45 @@ const Sidebar = ({ user, tasks }) => {
                             )
                         ) : (
                             projects.map((project) => (
-                                <Link
-                                    key={project._id}
-                                    to={`/workspace/${selectedWorkspace?._id}/project/${project._id}`}
-                                    className="group flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-gray-50 transition-colors gap-3 rounded-lg mx-1 text-sm"
-                                    title={project.name}
-                                >
-                                    <div className="flex-shrink-0 w-2 h-2 rounded-full bg-transparent 
-                                        group-hover:bg-blue-500 transition-colors" />
-                                    <Briefcase className="w-4 h-4 text-blue-500 flex-shrink-0 hidden md:block" />
-                                    <div className="min-w-0 flex-1 hidden md:block">
-                                        <span className="font-medium text-gray-700 truncate block">{project.name}</span>
-                                        {project.description && (
-                                            <span className="text-xs text-gray-500 truncate block">
-                                                {project.description}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="hidden md:block text-xs text-gray-400 flex-shrink-0">
-                                        {project.members?.length || 0} members
-                                    </div>
-                                </Link>
+                                <div key={project._id} className="flex items-center gap-2 mx-1">
+                                    <Link
+                                        to={`/workspace/${selectedWorkspace?._id}/project/${project._id}`}
+                                        className="group flex-1 flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-gray-50 transition-colors gap-3 rounded-lg text-sm overflow-hidden"
+                                        title={project.name}
+                                    >
+                                        <div className="flex-shrink-0 w-2 h-2 rounded-full bg-transparent 
+                        group-hover:bg-blue-500 transition-colors" />
+                                        <Briefcase className="w-4 h-4 text-blue-500 flex-shrink-0 hidden md:block" />
+                                        <div className="min-w-0 flex-1">
+                                            <span className="font-medium text-gray-700 truncate block">{project.name}</span>
+                                            {project.description && (
+                                                <span className="text-xs text-gray-500 truncate block">
+                                                    {project.description}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="hidden md:block text-xs text-gray-400 flex-shrink-0">
+                                            {project.members?.length || 0} members
+                                        </div>
+                                    </Link>
+                                    <Link
+                                        to={`/workspace/${selectedWorkspace?._id}/project/${project._id}/settings`}
+                                        className="flex-shrink-0 p-2 hover:bg-purple-50 rounded-lg transition-colors w-10 h-10 flex items-center justify-center"
+                                        title="Project Settings"
+                                    >
+                                        <Settings className="w-4 h-4 text-purple-500" />
+                                    </Link>
+                                </div>
                             ))
                         )}
                     </div>
 
                     {/* Quick Actions */}
                     <div className="border-t border-gray-100 pt-2 space-y-1">
-                        
+
                         {/* My Tasks */}
-                        <Link 
-                            to="/my-tasks" 
+                        <Link
+                            to="/my-tasks"
                             className="group flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-blue-50 transition-colors gap-3 rounded-lg mx-1 text-sm"
                         >
                             <div className="relative flex-shrink-0">
@@ -359,8 +367,8 @@ const Sidebar = ({ user, tasks }) => {
 
                         {/* Settings */}
                         {selectedWorkspace && (
-                            <Link 
-                                to={`/workspace/${selectedWorkspace._id}/settings`} 
+                            <Link
+                                to={`/workspace/${selectedWorkspace._id}/settings`}
                                 className="group flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-purple-50 transition-colors gap-3 rounded-lg mx-1 text-sm"
                             >
                                 <Settings className="w-5 h-5 text-purple-500 flex-shrink-0" />
@@ -370,8 +378,8 @@ const Sidebar = ({ user, tasks }) => {
 
                         {/* Members */}
                         {selectedWorkspace && (
-                            <Link 
-                                to={`/workspace/${selectedWorkspace._id}/members`} 
+                            <Link
+                                to={`/workspace/${selectedWorkspace._id}/members`}
                                 className="group flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-indigo-50 transition-colors gap-3 rounded-lg mx-1 text-sm"
                             >
                                 <Users className="w-5 h-5 text-indigo-500 flex-shrink-0" />
@@ -396,7 +404,7 @@ const Sidebar = ({ user, tasks }) => {
 
                 {/* Mobile Overlay for Dropdown */}
                 {workspaceDropdownOpen && (
-                    <div 
+                    <div
                         className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
                         onClick={() => setWorkspaceDropdownOpen(false)}
                     />
