@@ -18,7 +18,10 @@ const projectSchema = new mongoose.Schema({
 // Document middleware
 projectSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     try {
-        await TaskModel.deleteMany({ project: this._id }); // triggers Task hooks
+        const tasks = await TaskModel.find({ project: this._id });
+        for (const task of tasks) {
+            await task.deleteOne();
+        }
         next();
     } catch (err) {
         next(err);
