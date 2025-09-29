@@ -125,71 +125,121 @@ const TaskDetail = () => {
     return (
         <div className="max-w-3xl mx-auto p-6 space-y-6">
             {/* Task Header */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center">
-                <h2 className="text-2xl font-bold text-gray-900">{task.title}</h2>
-                <div className="flex gap-2 mt-4 md:mt-0">
-                    <button
-                        onClick={() => setIsEditModalOpen(true)}
-                        className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-blue-600 text-white px-4 py-2 rounded-md hover:from-green-600 hover:to-blue-700 transition-all"
-                    >
-                        <Edit2 className="w-5 h-5" /> Edit
-                    </button>
-                    <button
-                        onClick={() => navigate(-1)}
-                        className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-all"
-                    >
-                        <ArrowLeft className="w-5 h-5" /> Back
-                    </button>
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h2 className="text-2xl font-bold text-gray-900">{task.title}</h2>
+                        <div className="mt-2 flex flex-wrap gap-2 text-sm">
+                            {/* Status badge */}
+                            <span
+                                className={`px-3 py-1 rounded-full text-white text-xs font-medium ${task.status === "completed"
+                                        ? "bg-green-500"
+                                        : task.status === "in-progress"
+                                            ? "bg-blue-500"
+                                            : "bg-gray-400"
+                                    }`}
+                            >
+                                {task.status || "Unknown"}
+                            </span>
+                            {/* Priority badge */}
+                            <span
+                                className={`px-3 py-1 rounded-full text-white text-xs font-medium ${task.priority === "high"
+                                        ? "bg-red-500"
+                                        : task.priority === "medium"
+                                            ? "bg-yellow-500"
+                                            : "bg-green-500"
+                                    }`}
+                            >
+                                {task.priority || "Medium"}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setIsEditModalOpen(true)}
+                            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 shadow-sm"
+                        >
+                            <Edit2 className="w-4 h-4" /> Edit
+                        </button>
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="flex items-center gap-2 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"
+                        >
+                            <ArrowLeft className="w-4 h-4" /> Back
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {/* Task Info */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                <p className="text-gray-600">{task.description || 'No description'}</p>
-                <div className="flex gap-4 text-sm text-gray-500 flex-wrap">
-                    <span>Priority: {task.priority || 'Medium'}</span>
-                    <span>Status: {task.status || 'Unknown'}</span>
-                    <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
-                    <span>Assigned by: {task.owner?.name || 'Unknown'}</span>
-                    <span>Project: {task.project?.name || 'Unknown Project'}</span>
-                    <span>Sprint: {task.sprint?.name || 'Unknown'}</span>
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <p className="text-gray-600 mb-4">{task.description || "No description"}</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-gray-700">
+                    <div>
+                        <span className="font-medium">Due:</span>{" "}
+                        {task.dueDate
+                            ? new Date(task.dueDate).toLocaleDateString()
+                            : "No due date"}
+                    </div>
+                    <div>
+                        <span className="font-medium">Owner:</span>{" "}
+                        {task.owner?.name || "Unknown"}
+                    </div>
+                    <div>
+                        <span className="font-medium">To:</span>{" "}
+                        {task.assigner?.name || "Unknown"}
+                    </div>
+                    <div>
+                        <span className="font-medium">Project:</span>{" "}
+                        {task.project?.name || "Unknown"}
+                    </div>
+                    <div>
+                        <span className="font-medium">Sprint:</span>{" "}
+                        {task.sprint?.name || "None"}
+                    </div>
                 </div>
             </div>
 
-            {/* Toggle Comments / History */}
+            {/* Toggle */}
             <div className="flex gap-2">
                 <button
-                    className={`px-4 py-2 rounded-md ${viewMode === 'comments' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                    onClick={() => setViewMode('comments')}
+                    className={`px-4 py-2 rounded-lg font-medium transition ${viewMode === "comments"
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                    onClick={() => setViewMode("comments")}
                 >
                     Comments
                 </button>
                 <button
-                    className={`px-4 py-2 rounded-md ${viewMode === 'history' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
-                    onClick={() => setViewMode('history')}
+                    className={`px-4 py-2 rounded-lg font-medium transition ${viewMode === "history"
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                    onClick={() => setViewMode("history")}
                 >
                     History
                 </button>
             </div>
 
             {/* Comments */}
-            {viewMode === 'comments' ? (
+            {viewMode === "comments" ? (
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">Comments</h3>
-                    <form onSubmit={handleAddComment} className="mb-4 flex gap-2">
+                    <h3 className="text-lg font-semibold mb-4">Comments</h3>
+                    <form onSubmit={handleAddComment} className="flex gap-2 mb-4">
                         <input
                             type="text"
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
-                            placeholder="Add a comment..."
-                            className="flex-1 px-3 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500"
+                            placeholder="Write a comment..."
+                            className="flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
                         />
                         <button
                             type="submit"
-                            className="flex items-center justify-center bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 disabled:opacity-50"
                             disabled={!newComment.trim()}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
                         >
-                            <Send className="w-5 h-5" />
+                            <Send className="w-4 h-4" />
                         </button>
                     </form>
                     {task.comments.length === 0 ? (
@@ -198,18 +248,22 @@ const TaskDetail = () => {
                             <p>No comments yet.</p>
                         </div>
                     ) : (
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             {task.comments
                                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                                 .map((c) => (
-                                    <div key={c._id} className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                                        <div className="w-10 h-10 bg-blue-400 text-white rounded-full flex items-center justify-center font-bold">
-                                            {c.user?.name?.charAt(0) || 'U'}
+                                    <div key={c._id} className="flex gap-3">
+                                        <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-500 text-white font-semibold">
+                                            {c.user?.name?.charAt(0) || "U"}
                                         </div>
                                         <div className="flex-1">
-                                            <p className="text-sm font-medium text-gray-800">{c.user?.name || 'Unknown'}</p>
+                                            <p className="text-sm font-medium text-gray-900">
+                                                {c.user?.name || "Unknown"}
+                                            </p>
                                             <p className="text-gray-700">{c.content}</p>
-                                            <p className="text-xs text-gray-400 mt-1">{new Date(c.createdAt).toLocaleString()}</p>
+                                            <span className="text-xs text-gray-400">
+                                                {new Date(c.createdAt).toLocaleString()}
+                                            </span>
                                         </div>
                                     </div>
                                 ))}
@@ -219,24 +273,34 @@ const TaskDetail = () => {
             ) : (
                 // History
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">History</h3>
+                    <h3 className="text-lg font-semibold mb-4">History</h3>
                     {task.history.length === 0 ? (
                         <div className="text-center py-4 text-gray-500">No history yet.</div>
                     ) : (
-                        <div className="space-y-3">
+                        <div className="space-y-4">
                             {task.history
                                 .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
                                 .map((h, idx) => (
-                                    <div key={idx} className="p-3 bg-gray-50 rounded-xl">
-                                        <p className="text-sm text-gray-800">
-                                            <span className="font-medium">{h.updatedBy?.name || 'Unknown'}:</span> {h.field} changed
-                                        </p>
-                                        <p className="text-gray-700 text-sm">
-                                            {h.oldValue !== null ? `From: ${h.oldValue}` : ''}
-                                            {h.oldValue !== null && h.newValue !== null ? ' → ' : ''}
-                                            {h.newValue !== null ? `To: ${h.newValue}` : ''}
-                                        </p>
-                                        <p className="text-xs text-gray-400 mt-1">{h.updatedAt ? new Date(h.updatedAt).toLocaleString() : 'Unknown date'}</p>
+                                    <div key={idx} className="flex gap-3">
+                                        <div className="w-3 h-3 mt-2 rounded-full bg-blue-500" />
+                                        <div>
+                                            <p className="text-sm text-gray-800">
+                                                <span className="font-medium">
+                                                    {h.updatedBy?.name || "Unknown"}
+                                                </span>{" "}
+                                                updated <span className="font-medium">{h.field}</span>
+                                            </p>
+                                            <p className="text-gray-700 text-sm">
+                                                {h.oldValue ? `From: ${h.oldValue}` : ""}
+                                                {h.oldValue && h.newValue ? " → " : ""}
+                                                {h.newValue ? `To: ${h.newValue}` : ""}
+                                            </p>
+                                            <p className="text-xs text-gray-400 mt-1">
+                                                {h.updatedAt
+                                                    ? new Date(h.updatedAt).toLocaleString()
+                                                    : "Unknown date"}
+                                            </p>
+                                        </div>
                                     </div>
                                 ))}
                         </div>
