@@ -7,7 +7,7 @@ export const googleCallback = (req, res) => {
         const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, {
             expiresIn: "24h",
         });
-
+        
         // Encode user data cho URL
         const userData = {
             id: req.user._id,
