@@ -8,6 +8,7 @@ import ProjectPage from './pages/ProjectPage';
 import MyTasksPage from './pages/MyTasksPage';
 import WorkspaceSettings from './pages/WorkspaceSettingPage'; // New
 import WorkspaceMembers from './pages/WorkspaceMembersPage'; // New
+import ChatPage from "./pages/ChatPage"
 import TaskDetail from './pages/TaskDetail'
 import Profile from "./pages/Profile";
 import ProjectSettings from "./pages/ProjectSettings";
@@ -159,6 +160,7 @@ const App = () => {
                 <Route path="/workspace/:workspaceId/settings" element={<WorkspaceSettings />} />
                 <Route path="/workspace/:workspaceId/members" element={<WorkspaceMembers />} />
                 <Route path="/my-tasks" element={<MyTasksPage />} />
+                <Route path="/chat" element={<ChatPage />} />
                 <Route path="/task/:taskId" element={<TaskDetail />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/workspace/:workspaceId/project/:projectId/settings" element={<ProjectSettings />} />

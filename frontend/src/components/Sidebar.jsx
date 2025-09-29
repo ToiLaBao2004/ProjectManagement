@@ -7,7 +7,8 @@ import {
     Settings,
     Users,
     User,
-    Plus
+    Plus,
+    MessageSquare
 } from 'lucide-react';
 import axios from 'axios';
 import WorkspaceModal from './WorkspaceModal';
@@ -391,6 +392,19 @@ const Sidebar = ({ user, tasks }) => {
                                 </div>
                             </Link>
                         )}
+                        {/*Chat*/}
+                        <Link
+                            to="/chat"
+                            className="group flex items-center px-3 py-2 md:px-4 md:py-3 hover:bg-blue-50 transition-colors gap-3 rounded-lg mx-1 text-sm"
+                        >
+                            <div className="relative flex-shrink-0">
+                                <MessageSquare className="w-5 h-5 text-green-500" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <span className="font-medium text-gray-700 hidden md:inline">Chat</span>
+                            </div>
+                        </Link>
+
                     </div>
                 </nav>
 
