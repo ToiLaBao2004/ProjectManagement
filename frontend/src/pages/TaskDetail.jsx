@@ -186,6 +186,10 @@ const TaskDetail = () => {
                         {task.owner?.name || "Unknown"}
                     </div>
                     <div>
+                        <span className="font-medium">To:</span>{" "}
+                        {task.assigner?.name || "Unknown"}
+                    </div>
+                    <div>
                         <span className="font-medium">Project:</span>{" "}
                         {task.project?.name || "Unknown"}
                     </div>
