@@ -351,7 +351,7 @@ const ProjectPage = () => {
                                             <span>Priority: {task.priority || 'Medium'}</span>
                                             <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
                                             <span>Assigned by: {task.owner?.name || 'Unknown'}</span>
-                                            <span>To: {task.assigner?.name || 'Unknown'}</span>
+                                            <span>To: {task.assignee?.name || 'Unknown'}</span>
                                             <span>Sprint: {task.sprint?.name || 'No sprint'}</span>
                                         </div>
                                     </div>

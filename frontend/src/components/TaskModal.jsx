@@ -11,7 +11,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
         priority: 'medium',
         status: 'pending',
         dueDate: '',
-        assigner: '',
+        assignee: '',
         sprintId: ''
     });
     const [projectMembers, setProjectMembers] = useState([]);
@@ -42,8 +42,8 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
             const currentUserId = localStorage.getItem('currentUser')
                 ? JSON.parse(localStorage.getItem('currentUser')).id
                 : null;
-            if (currentUserId && !formData.assigner) {
-                setFormData(prev => ({ ...prev, assigner: currentUserId }));
+            if (currentUserId && !formData.assignee) {
+                setFormData(prev => ({ ...prev, assignee: currentUserId }));
             }
         } catch (error) {
             console.error('Error fetching project members:', error);
@@ -93,7 +93,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                     priority: formData.priority,
                     status: formData.status,
                     dueDate: formData.dueDate,
-                    assigner: formData.assigner,
+                    assignee: formData.assignee,
                     sprintId: formData.sprintId || null
                 },
                 { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
@@ -112,7 +112,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                 setMessage({ text: 'Task created successfully!', type: 'success' });
 
                 setTimeout(() => {
-                    setFormData({ title: '', description: '', priority: 'medium', status: 'pending', dueDate: '', assigner: '' });
+                    setFormData({ title: '', description: '', priority: 'medium', status: 'pending', dueDate: '', assignee: '' });
                     setShowMembersDropdown(false);
                     onClose();
                     if (onTaskCreated && task) onTaskCreated(task);
@@ -137,7 +137,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
     };
 
     const handleMemberSelect = (memberId) => {
-        setFormData(prev => ({ ...prev, assigner: memberId }));
+        setFormData(prev => ({ ...prev, assignee: memberId }));
         setShowMembersDropdown(false);
     };
 
@@ -145,8 +145,8 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
         ? JSON.parse(localStorage.getItem('currentUser')).id
         : null;
 
-    const selectedMember = projectMembers.find(member => member.user._id === formData.assigner);
-    const displayAssigner = selectedMember
+    const selectedMember = projectMembers.find(member => member.user._id === formData.assignee);
+    const displayAssignee = selectedMember
         ? selectedMember.user.name || selectedMember.user.email
         : 'Select a member';
 
@@ -277,7 +277,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                         />
                     </div>
 
-                    {/* Assigner */}
+                    {/* Assignee */}
                     <div className="relative">
                         <label className="block text-sm font-medium text-gray-700 mb-2">Assign To <span className="text-red-500">*</span></label>
                         <div className="relative">
@@ -288,7 +288,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                                 <input
                                     type="text"
                                     placeholder="Select a member..."
-                                    value={displayAssigner}
+                                    value={displayAssignee}
                                     onFocus={() => !loadingMembers && setShowMembersDropdown(true)}
                                     className="w-full pl-10 pr-10 py-3 bg-transparent border-none focus:outline-none"
                                     disabled={loading || loadingMembers}
@@ -318,7 +318,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                                     ) : (
                                         projectMembers.map(member => {
                                             const memberUser = member.user;
-                                            const isSelected = memberUser._id === formData.assigner;
+                                            const isSelected = memberUser._id === formData.assignee;
                                             const isCurrentUser = memberUser._id === currentUserId;
                                             return (
                                                 <button
@@ -383,7 +383,7 @@ const TaskModal = ({ isOpen, onClose, onTaskCreated, projectId, workspaceId, pro
                         <button
                             type="submit"
                             className="flex-1 py-3 px-4 bg-gradient-to-r from-green-500 to-blue-600 text-white font-medium rounded-2xl hover:from-green-600 hover:to-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                            disabled={loading || !formData.title.trim() || !formData.assigner}
+                            disabled={loading || !formData.title.trim() || !formData.assignee}
                         >
                             {loading ? (
                                 <>

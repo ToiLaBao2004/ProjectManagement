@@ -187,7 +187,7 @@ const TaskDetail = () => {
                     </div>
                     <div>
                         <span className="font-medium">To:</span>{" "}
-                        {task.assigner?.name || "Unknown"}
+                        {task.assignee?.name || "Unknown"}
                     </div>
                     <div>
                         <span className="font-medium">Project:</span>{" "}
