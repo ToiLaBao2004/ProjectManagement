@@ -1,0 +1,238 @@
+[
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "users",
+    "prompt": "Find Users with the word Bảo in the name",
+    "query": {
+      "collection": "users",
+      "aggregate": [
+        {
+          "$match": {
+            "name": {
+              "$regex": "Bảo",
+              "$options": "i"
+            }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "users",
+    "prompt": "Find all users",
+    "query": {
+      "collection": "users",
+      "aggregate": []
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "users",
+    "prompt": "Find users whose email contains 'phuchao'.",
+    "query": {
+      "collection": "users",
+      "aggregate": [
+        {
+          "$match": {
+            "email": {
+              "$regex": "phuchao"
+            }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "projects",
+    "prompt": "Find out how many projects there are.",
+    "query": {
+      "collection": "projects",
+      "aggregate": [
+        {
+          "$count": "total_projects"
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "projects",
+    "prompt": "List current projects, excluding their IDs.",
+    "query": {
+      "collection": "projects",
+      "aggregate": [
+        {
+          "$project": {
+            "_id": 0,
+            "name": 1,
+            "description": 1,
+            "owner": 1,
+            "workspace": 1,
+            "sprints": 1
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "tasks",
+    "prompt": "Find all tasks with descriptions related to MongoDB.",
+    "query": {
+      "collection": "tasks",
+      "aggregate": [
+        {
+          "$match": {
+            "description": {
+              "$regex": "MongoDB",
+              "$options": "i"
+            }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "users",
+    "prompt": "Find all users who have not been involved in any project as a member or owner of the project",
+    "query": {
+      "collection": "users",
+      "aggregate": [
+        {
+          "$lookup": {
+            "from": "projects",
+            "let": {
+              "userId": "$_id"
+            },
+            "pipeline": [
+              {
+                "$match": {
+                  "$expr": {
+                    "$or": [
+                      {
+                        "$eq": [
+                          "$owner",
+                          "$$userId"
+                        ]
+                      },
+                      {
+                        "$in": [
+                          "$$userId",
+                          "$members.user"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            ],
+            "as": "projectsInvolved"
+          }
+        },
+        {
+          "$match": {
+            "projectsInvolved": {
+              "$size": 0
+            }
+          }
+        },
+        {
+          "$project": {
+            "projectsInvolved": 0
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "tasks",
+    "prompt": "Percentage of the total number of tasks completed in the project called First Project",
+    "query": {
+      "collection": "tasks",
+      "aggregate": [
+        {
+          "$lookup": {
+            "from": "projects",
+            "localField": "project",
+            "foreignField": "_id",
+            "as": "projectInfo"
+          }
+        },
+        {
+          "$unwind": "$projectInfo"
+        },
+        {
+          "$match": {
+            "projectInfo.name": "First Project"
+          }
+        },
+        {
+          "$group": {
+            "_id": null,
+            "totalTasks": {
+              "$sum": 1
+            },
+            "completedTasks": {
+              "$sum": {
+                "$cond": [
+                  {
+                    "$eq": [
+                      "$completed",
+                      true
+                    ]
+                  },
+                  1,
+                  0
+                ]
+              }
+            }
+          }
+        },
+        {
+          "$project": {
+            "_id": 0,
+            "completionPercentage": {
+              "$multiply": [
+                {
+                  "$divide": [
+                    "$completedTasks",
+                    "$totalTasks"
+                  ]
+                },
+                100
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  }
+]

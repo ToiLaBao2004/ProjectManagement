@@ -1,0 +1,226 @@
+[
+  {
+    "chunk_type": "field",
+    "collection_name": "workspaces",
+    "name": "name",
+    "type": "String (unique)",
+    "description": "The name of the workspace (organization or working group)."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "workspaces",
+    "name": "description",
+    "type": "String",
+    "description": "A short text providing details about the purpose or scope of the workspace."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "workspaces",
+    "name": "owner",
+    "type": "ObjectId (ref: User)",
+    "description": "The user who created or owns this workspace."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "workspaces",
+    "name": "members",
+    "type": "Array of Member (subdocument)",
+    "description": "A list of users who belong to the workspace, along with their roles."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects",
+    "name": "workspace",
+    "type": "ObjectId (ref: Workspace)",
+    "description": "The workspace to which this project belongs."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects",
+    "name": "name",
+    "type": "String",
+    "description": "The name of the project."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects",
+    "name": "description",
+    "type": "String",
+    "description": "A text providing details about the project's purpose, goals, or scope."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects",
+    "name": "owner",
+    "type": "ObjectId (ref: User)",
+    "description": "The user who created or owns this project."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects",
+    "name": "members",
+    "type": "Array of Member (subdocument)",
+    "description": "A list of users who are part of the project, including their assigned roles."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects",
+    "name": "sprints",
+    "type": "Array of Sprint (subdocument)",
+    "description": "The set of sprints that organize tasks within the project."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects.sprints",
+    "name": "name",
+    "type": "String (unique)",
+    "description": "The name of the sprint, which must be unique within the project."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects.sprints",
+    "name": "startDate",
+    "type": "Date",
+    "description": "The starting date of the sprint."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "projects.sprints",
+    "name": "endDate",
+    "type": "Date",
+    "description": "The ending date of the sprint."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": ["projects.member", "workspaces.member"],
+    "name": "user",
+    "type": "ObjectId (ref: User",
+    "description": "The user assigned as a member of the workspace or project."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": ["projects.member", "workspaces.member"],
+    "name": "role",
+    "type": "String (enum: admin, member, default: member)",
+    "description": "The role of the user in the workspace or project (admin or member)."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": ["projects.member", "workspaces.member"],
+    "name": "joinedAt",
+    "type": "Date (default: Date.now)",
+    "description": "The date and time when the user joined the workspace or project."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "project",
+    "type": "ObjectId (ref: Project)",
+    "description": "The project that this task belongs to."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "sprint",
+    "type": "ObjectId (ref: Sprint)",
+    "description": "The sprint within the project that this task is associated with."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "title",
+    "type": "String",
+    "description": "The title of the task."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "description",
+    "type": "String",
+    "description": "A detailed description of the task."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "priority",
+    "type": "String (enum: low, medium, high, default: medium)",
+    "description": "The priority level of the task (low, medium, or high)."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "status",
+    "type": "String (enum: pending, in-progress, completed, default: pending)",
+    "description": "The current status of the task."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "dueDate",
+    "type": "Date",
+    "description": "The deadline by which the task should be completed."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "owner",
+    "type": "ObjectId (ref: User)",
+    "description": "The user who owns or is primarily responsible for this task."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "assignee",
+    "type": "ObjectId (ref: User)",
+    "description": "The user assigned to complete the task."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "completed",
+    "type": "Boolean (default: false)",
+    "description": "Indicates whether the task has been completed."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks",
+    "name": "comments",
+    "type": "Array of Comment (subdocument)",
+    "description": "The list of comments associated with this task."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks.comments",
+    "name": "user",
+    "type": "ObjectId (ref: User)",
+    "description": "The user who wrote the comment."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "tasks.comments",
+    "name": "content",
+    "type": "String",
+    "description": "The actual text content of the comment."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "users",
+    "name": "name",
+    "type": "String",
+    "description": "The full name of the user."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "users",
+    "name": "email",
+    "type": "String",
+    "description": "The unique email address of the user."
+  },
+  {
+    "chunk_type": "field",
+    "collection_name": "users",
+    "name": "password",
+    "type": "String",
+    "description": "The password hash for user authentication."
+  }
+]
