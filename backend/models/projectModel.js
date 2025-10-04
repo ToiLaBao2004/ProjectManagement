@@ -15,6 +15,21 @@ const projectSchema = new mongoose.Schema({
     sprints: [sprintSchema],
 }, { timestamps: true });
 
+// Defind project names are unique within a workspace
+projectSchema.index({ workspace: 1, name: 1 }, { unique: true });
+
+projectSchema.pre('save', function(next) {
+    // Check no sprints or sprints not changed
+    if (!this.isModified('sprints') || !this.sprints) return next();
+
+    const sprintNames = this.sprints.map(s => s.name.trim().toLowerCase());
+    const uniqueNames = new Set(sprintNames);
+    if (sprintNames.length !== uniqueNames.size) {
+        return next(new Error('Sprint names must be unique within a project.'));
+    }
+    next();
+});
+
 // Document middleware
 projectSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     try {
