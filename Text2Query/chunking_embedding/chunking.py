@@ -1,12 +1,15 @@
-import sys
-import os
 from langchain_community.document_transformers.openai_functions import create_metadata_tagger
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 from pymongo import MongoClient
 from langchain.schema import Document
 import datetime
 import json
 import torch
+
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from helper.model_embedding import GemmEmbedding
 from configs.settings import settings
 from configs.paths import DATA_DIR
@@ -40,7 +43,7 @@ class Chunking:
         }
 
 
-        self.llm = ChatGoogleGenerativeAI(api_key=settings.gemini_ai_api_key, temperature=0, model=settings.model_registry["llm"])
+        self.llm = ChatOpenAI(api_key=settings.open_ai_api_key, temperature=0, model=settings.model_registry["openai"])
 
         self.document_transformer = create_metadata_tagger(metadata_schema=self.schema, llm=self.llm)
         self.embedder=GemmEmbedding()
