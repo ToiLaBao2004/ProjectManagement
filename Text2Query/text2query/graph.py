@@ -2,7 +2,7 @@ from langgraph.graph import StateGraph,START,END
 from text2query.nodes import (translate_node, retrieve_node, generate_query_node,
                    validate_query_node, execute_query_node,handle_error_node
                    ,result_node,rewrite_prompt_node,error_node)
-from text2query.state import State, print_state
+from text2query.state import State
 from configs.settings import settings
 from helper import store_history_chat
 from langgraph.checkpoint.memory import MemorySaver
