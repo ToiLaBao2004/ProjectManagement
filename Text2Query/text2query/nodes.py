@@ -4,7 +4,7 @@ from configs.constant import EXAMPLE_QUERY_JSON
 from helper import clean_raw_query,store_history_chat
 from text2query.state import print_state
 import json
-from helper import convert_objectId
+from helper import debug_state
  
 def translate_node(state):
     state.translated=services.translator.translate(state.prompt)
@@ -99,7 +99,7 @@ def execute_query_node(state):
         pipeline=query["aggregate"]
         result=list(collection.aggregate(pipeline))
         
-        state.result=convert_objectId.convert_objectid(result)
+        state.result=result
         return state
     
     except PyMongoError as e:
@@ -153,7 +153,7 @@ def result_node(state):
                                         state.prompt,
                                         state.cleaned_raw_query)
     
-    #print_state(state)
+    print_state(state)
     return state
 
 def rewrite_prompt_node(state):
