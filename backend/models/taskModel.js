@@ -17,36 +17,6 @@ const taskSchema = new mongoose.Schema({
     history: [historySchema],
 }, { timestamps: true });
 
-taskSchema.pre('save', async function (next) {
-    try {
-        // Chỉ check khi task mới hoặc các field quan trọng thay đổi
-        if (!this.isNew && !this.isModified('title') && !this.isModified('project') && !this.isModified('sprint')) {
-            return next();
-        }
-
-        const query = {
-            project: this.project,
-            title: this.title,
-        };
-
-        if (this.sprint) {
-            query.sprint = this.sprint;
-        } else {
-            query.sprint = { $in: [null, undefined] };
-        }
-
-        const existingTask = await mongoose.models.Task.findOne(query);
-
-        if (existingTask && existingTask._id.toString() !== this._id.toString()) {
-            return next(new Error('Task title must be unique within the same project and sprint'));
-        }
-
-        next();
-    } catch (err) {
-        next(err);
-    }
-});
-
 // Document middleware
 taskSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     try {
