@@ -15,9 +15,6 @@ const projectSchema = new mongoose.Schema({
     sprints: [sprintSchema],
 }, { timestamps: true });
 
-// Defind project names are unique within a workspace
-projectSchema.index({ workspace: 1, name: 1 }, { unique: true });
-
 // Document middleware
 projectSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     try {

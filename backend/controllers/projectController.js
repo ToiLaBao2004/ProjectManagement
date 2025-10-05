@@ -26,6 +26,20 @@ export async function createProject(req, res) {
         message: "Only workspace admins can create projects.",
       });
     }
+
+    // Check duplicate project names within a workspace
+    const normalizedName = name.trim().toLowerCase();
+    const existingProject = await Project.findOne({
+      workspace: workspaceId,
+      name: { $regex: new RegExp(`^${normalizedName}$`, "i") },
+    });
+    if (existingProject) {
+      return res.status(400).json({
+        success: false,
+        message: "Project name must be unique within the same workspace.",
+      });
+    }
+
     const project = new Project({
       workspace: workspaceId,
       name,
