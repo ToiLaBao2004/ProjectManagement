@@ -318,11 +318,6 @@ const Sidebar = ({ user, tasks }) => {
                                         <Briefcase className="w-4 h-4 text-blue-500 flex-shrink-0 hidden md:block" />
                                         <div className="min-w-0 flex-1">
                                             <span className="font-medium text-gray-700 truncate block">{project.name}</span>
-                                            {project.description && (
-                                                <span className="text-xs text-gray-500 truncate block">
-                                                    {project.description}
-                                                </span>
-                                            )}
                                         </div>
                                         <div className="hidden md:block text-xs text-gray-400 flex-shrink-0">
                                             {project.members?.length || 0} members

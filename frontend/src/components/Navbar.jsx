@@ -277,8 +277,6 @@ const Navbar = ({ user = {}, onLogout }) => {
                         )}
                     </div>
 
-                    
-
                     {/* USER DROPDOWN */}
                     <div ref={menuref} className='relative'>
                         <button 
