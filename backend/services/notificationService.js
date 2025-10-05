@@ -44,15 +44,15 @@ cron.schedule("0 * * * *", async () => {
                     task: task._id
                 });
             }
-            if (task.assigner.toString() !== task.owner.toString()) {
-                const assignerExists = await NotificationModel.findOne({
-                    user: task.assigner,
+            if (task.assignee.toString() !== task.owner.toString()) {
+                const assigneeExists = await NotificationModel.findOne({
+                    user: task.assignee,
                     type: "task_due_soon",
                     task: task._id
                 });
-                if (!assignerExists) {
+                if (!assigneeExists) {
                     await createNotification({
-                        user: task.assigner,
+                        user: task.assignee,
                         type: "task_due_soon",
                         title: "Task bạn được giao sắp đến hạn",
                         message: `Task "${task.title}" sẽ đến hạn vào ${task.dueDate.toLocaleString()}`,
