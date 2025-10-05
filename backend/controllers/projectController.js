@@ -435,6 +435,24 @@ export async function updateProject(req, res) {
           "Only project managers and project owner can update project details.",
       });
     }
+
+    // Check duplicate project name within a workspace when updating project name
+    if (name && name.trim().toLowerCase() !== project.name.trim().toLowerCase()) {
+      const normalizedName = name.trim().toLowerCase();
+      const existingProject = await Project.findOne({
+        workspace: project.workspace, 
+        name: { $regex: new RegExp(`^${normalizedName}$`, "i") }, 
+        _id: { $ne: projectId },
+      });
+      if (existingProject) {
+        return res.status(400).json({
+          success: false,
+          message: "Project name must be unique within the same workspace.",
+        });
+      }
+      project.name = name.trim();
+    }
+
     if (name) project.name = name;
     if (description) project.description = description;
     await project.save();

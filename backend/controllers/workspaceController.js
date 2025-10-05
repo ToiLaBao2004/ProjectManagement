@@ -161,7 +161,7 @@ export async function updateWorkspace(req, res) {
             return res.status(403).json({ success: false, message: 'Only admins can update the workspace.' });
         }
 
-        // Check duplicate workspace name when update ws name
+        // Check duplicate workspace name when updating ws name
         if (name && name.trim().toLowerCase() !== workspace.name.trim().toLowerCase()) {
             const normalizedName = name.trim().toLowerCase();
             const existingWorkspace = await Workspace.findOne({
@@ -178,7 +178,6 @@ export async function updateWorkspace(req, res) {
             workspace.name = name.trim();
         }
 
-        if (name) workspace.name = name;
         if (description) workspace.description = description;
         await workspace.save();
         res.status(200).json({ success: true, workspace });
