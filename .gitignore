@@ -1,2 +1,4 @@
 backend/node_modules/
 backend/.env
+Text2Query/.env
+Text2Query/models
