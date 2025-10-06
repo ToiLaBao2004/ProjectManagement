@@ -1,0 +1,68 @@
+[
+  {
+    "collection_name": "workspaces",
+    "chunk_type": "description",
+    "description_en": "The workspaces collection stores information about workspaces. Each workspace has a unique name, a detailed description, and information about its creator or owner. A workspace also includes a list of members, with each member assigned a role (e.g., admin or member). Workspaces are used to group projects and manage collaboration scope among multiple users.",
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "collection_name": "projects",
+    "chunk_type": "description",
+    "description_en": "The projects collection stores information about projects, each belonging to a workspace. A project includes its name, detailed description, creator or owner, and a list of members with assigned roles (such as manager, developer, tester). Additionally, the project contains a list of sprints used to divide the workflow into smaller phases. Project data enables tracking of progress, task assignments, and overall development lifecycle status.",
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "collection_name": "projects.sprints",
+    "chunk_type": "description",
+    "description_en": "The sprints sub-schema within the projects collection stores short-term working phases (sprints). Each sprint has a unique name, a start date, and an end date. Sprints divide projects into time-bound cycles, supporting progress management, goal tracking, and evaluation of results within each timeframe.",
+    "metadata": {
+      "languages": ["en"],
+      "created_at": "2025-09-13T00:00:00Z"
+    }
+  },
+  {
+    "collection_name": "projects.member, workspaces.member",
+    "chunk_type": "description",
+    "description_en": "The member sub-schema is used in both projects and workspaces collections to represent user participation. Each member links to a User via an ObjectId reference, specifies the role (admin or member, with member as default), and records the date they joined. This structure supports managing access control, responsibilities, and collaboration history within projects and workspaces.",
+    "metadata": {
+      "languages": ["en"],
+      "created_at": "2025-09-13T00:00:00Z"
+    }
+  },
+  {
+    "collection_name": "tasks",
+    "chunk_type": "description",
+    "description_en": "The tasks collection stores project tasks. Each task includes references to the corresponding project and sprint, a title, a detailed description, priority level, status, due date, creator, and assignee. Additionally, tasks contain a completion flag and a list of comments to monitor progress, feedback, and communication among members.",
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "collection_name": "tasks.comments",
+    "chunk_type": "description",
+    "description_en": "The comments sub-schema inside a task stores comments related to the task. Each comment includes the author (user), content, creation date, and updated date if edited. Comments are used for discussions, feedback, or notes directly tied to a task, enhancing team communication and tracking the history of exchanges.",
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "collection_name": "users",
+    "chunk_type": "description",
+    "description_en": "The User reference is used in multiple schemas such as workspace, project, task, and comment. A user may act as an owner, project member, task creator, assignee, or comment author. Users play a central role in the entire work management system, linking data to specific individuals.",
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "collection_name": "system_fields",
+    "chunk_type": "description",
+    "description_en": "Most schemas include system fields such as createdAt, updatedAt, or timestamps. These fields store the record creation and modification times, supporting version control, change history tracking, and audit purposes during operation.",
+    "metadata": {
+      "languages": "en"
+    }
+  }
+]
