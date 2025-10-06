@@ -12,9 +12,6 @@ const workspaceSchema = new mongoose.Schema({
     }],
 }, { timestamps: true });
 
-// Unique index for name + owner
-workspaceSchema.index({ name: 1, owner: 1 }, { unique: true });
-
 workspaceSchema.pre('deleteOne', { document: true, query: false }, async function(next) {
     try {
         const projects = await ProjectModel.find({ workspace: this._id });

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createTask, getTasksByProject, updateTask, getTaskByUserAssigner, makeComment, getTaskDetail, deleteTask,
+import { createTask, getTasksByProject, updateTask, getTaskByUserAssignee, makeComment, getTaskDetail, deleteTask,
     getTasksBySprint
  } from '../controllers/taskController.js';
 import { authMiddleware } from '../middleware/auth.js';
@@ -13,7 +13,7 @@ taskRouter.delete('/delete', authMiddleware, deleteTask);
 taskRouter.get('/sprint/:sprintId', authMiddleware, getTasksBySprint);
 
 // standalone route: /task
-taskRouter.get('/task/assigner', authMiddleware, getTaskByUserAssigner);
+taskRouter.get('/task/assignee', authMiddleware, getTaskByUserAssignee);
 taskRouter.put('/:taskId/update', authMiddleware, updateTask);
 taskRouter.post('/:taskId/comment', authMiddleware, makeComment);
 taskRouter.get('/task/:taskId', authMiddleware, getTaskDetail);

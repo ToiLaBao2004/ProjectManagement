@@ -9,6 +9,21 @@ export async function createWorkspace(req, res) {
         if (!name) {
             return res.status(400).json({ success: false, message: 'Workspace name is required.' });
         }
+
+        // Check duplicate workspace names with the same owner
+        const normalizedName = name.trim().toLowerCase();
+        const existingWorkspace = await Workspace.findOne({
+            owner: req.user.id,
+            name: { $regex: new RegExp(`^${normalizedName}$`, "i") },
+        });
+
+        if (existingWorkspace) {
+            return res.status(400).json({
+                success: false,
+                message: "Workspace name must be unique for each owner.",
+            });
+        }
+
         const workspace = new Workspace({
             name,
             description,
@@ -145,7 +160,24 @@ export async function updateWorkspace(req, res) {
         if (!isAdmin) {
             return res.status(403).json({ success: false, message: 'Only admins can update the workspace.' });
         }
-        if (name) workspace.name = name;
+
+        // Check duplicate workspace name when updating ws name
+        if (name && name.trim().toLowerCase() !== workspace.name.trim().toLowerCase()) {
+            const normalizedName = name.trim().toLowerCase();
+            const existingWorkspace = await Workspace.findOne({
+                owner: workspace.owner, 
+                name: { $regex: new RegExp(`^${normalizedName}$`, "i") },
+                _id: { $ne: workspaceId }, 
+            });
+            if (existingWorkspace) {
+                return res.status(400).json({
+                success: false,
+                message: "Workspace name must be unique for each owner.",
+                });
+            }
+            workspace.name = name.trim();
+        }
+
         if (description) workspace.description = description;
         await workspace.save();
         res.status(200).json({ success: true, workspace });

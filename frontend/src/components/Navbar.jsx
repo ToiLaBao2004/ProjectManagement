@@ -273,30 +273,9 @@ const Navbar = ({ user = {}, onLogout }) => {
                                         ))
                                     )}
                                 </div>
-
-                                {/* Footer */}
-                                {notifications.length > 0 && (
-                                    <div className='px-4 py-2 border-t border-gray-100'>
-                                        <button 
-                                            onClick={() => navigate('/notifications')}
-                                            className='w-full text-sm text-blue-600 hover:text-blue-700 font-medium py-1 rounded transition-colors'
-                                        >
-                                            View all notifications
-                                        </button>
-                                    </div>
-                                )}
                             </div>
                         )}
                     </div>
-
-                    {/* SETTINGS BUTTON */}
-                    <button 
-                        className='p-2 text-gray-600 hover:text-sky-400 transition-colors duration-300
-                        hover:bg-sky-50 rounded-full'
-                        onClick={() => navigate('/profile')}
-                    >
-                        <Settings className='w-5 h-5'/>
-                    </button>
 
                     {/* USER DROPDOWN */}
                     <div ref={menuref} className='relative'>

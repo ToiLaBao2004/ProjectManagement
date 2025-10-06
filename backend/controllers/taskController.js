@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 export async function createTask(req, res) {
     try {
         const { projectId } = req.params;
-        const { title, description, priority, status, dueDate, assigner, sprintId } = req.body;
+        const { title, description, priority, status, dueDate, assignee, sprintId } = req.body;
         const userId = req.user.id;
 
         const project = await Project.findById(projectId);
@@ -15,9 +15,9 @@ export async function createTask(req, res) {
             return res.status(404).json({ message: 'Project not found' });
         }
 
-        const assignerUser = await User.findById(assigner);
-        if (!assignerUser) {
-            return res.status(404).json({ message: 'Assigner not found' });
+        const assigneeUser = await User.findById(assignee);
+        if (!assigneeUser) {
+            return res.status(404).json({ message: 'Assignee not found' });
         }
 
         // Nếu có sprintId thì kiểm tra sprint có trong project không
@@ -36,7 +36,7 @@ export async function createTask(req, res) {
             status,
             dueDate,
             owner: userId,
-            assigner: assignerUser._id,
+            assignee: assigneeUser._id,
             sprint: sprintId || null
         });
 
@@ -52,9 +52,9 @@ export async function createTask(req, res) {
         });
 
         // Notify người được assign (nếu khác với owner)
-        if (assignerUser._id.toString() !== userId.toString()) {
+        if (assigneeUser._id.toString() !== userId.toString()) {
             await createNotification({
-                user: assignerUser._id,
+                user: assigneeUser._id,
                 type: "task_assigned",
                 title: "Bạn được giao một task mới",
                 message: `Bạn được giao task "${title}"`,
@@ -88,7 +88,7 @@ export async function getTasksByProject(req, res) {
         // lấy tasks
         const tasks = await Task.find({ project: projectId })
             .populate('owner', 'name email')
-            .populate('assigner', 'name email')
+            .populate('assignee', 'name email')
             .populate('project', 'name workspace')
             .lean(); // convert thành plain object để dễ merge
 
@@ -110,7 +110,7 @@ export async function getTasksByProject(req, res) {
     }
 }
 
-export async function getTaskByUserAssigner(req, res) {
+export async function getTaskByUserAssignee(req, res) {
     try {
         const userId = req.user.id;
 
@@ -123,9 +123,9 @@ export async function getTaskByUserAssigner(req, res) {
             });
         });
 
-        const tasks = await Task.find({ assigner: userId })
+        const tasks = await Task.find({ assignee: userId })
             .populate('owner', 'name email')
-            .populate('assigner', 'name email')
+            .populate('assignee', 'name email')
             .populate('project', 'name workspace')
             .lean();
 
@@ -205,13 +205,13 @@ export async function updateTask(req, res) {
 
         if (task.status === "completed" && oldStatus !== "completed") {
             await sendUpdateNotification("task_completed", task.owner);
-            if (task.assigner.toString() !== task.owner.toString()) {
-                await sendUpdateNotification("task_completed", task.assigner);
+            if (task.assignee.toString() !== task.owner.toString()) {
+                await sendUpdateNotification("task_completed", task.assignee);
             }
         } else {
             await sendUpdateNotification("task_updated", task.owner);
-            if (task.assigner.toString() !== task.owner.toString()) {
-                await sendUpdateNotification("task_updated", task.assigner);
+            if (task.assignee.toString() !== task.owner.toString()) {
+                await sendUpdateNotification("task_updated", task.assignee);
             }
         }
 
@@ -250,7 +250,7 @@ export async function makeComment(req, res) {
         await task.save();
         const updatedTask = await Task.findById(taskId)
             .populate('owner', 'name email')
-            .populate('assigner', 'name email')
+            .populate('assignee', 'name email')
             .populate('project', 'name workspace')
             .populate('comments.user', 'name email')
             .populate('history.updatedBy', 'name email');
@@ -263,9 +263,9 @@ export async function makeComment(req, res) {
                 task: task._id
             });
         }
-        if (task.assigner.toString() !== task.owner.toString() && task.assigner.toString() !== userId.toString()) {
+        if (task.assignee.toString() !== task.owner.toString() && task.assignee.toString() !== userId.toString()) {
             await createNotification({
-                user: task.assigner,
+                user: task.assignee,
                 type: "comment_added",
                 title: "Có comment mới trong task bạn được giao",
                 message: `"${content}"`,
@@ -288,7 +288,7 @@ export async function getTaskDetail(req, res) {
 
         let task = await Task.findById(taskId)
             .populate('owner', 'name email')
-            .populate('assigner', 'name email')
+            .populate('assignee', 'name email')
             .populate('project', 'name workspace sprints') // lấy cả sprint từ project
             .populate('comments.user', 'name email')
             .populate('history.updatedBy', 'name email')
@@ -382,7 +382,7 @@ export async function getTasksBySprint(req, res) {
         // Lấy tất cả task của sprint
         const tasks = await Task.find({ sprint: sprintId })
             .populate('owner', 'name email')
-            .populate('assigner', 'name email')
+            .populate('assignee', 'name email')
             .populate('project', 'name workspace sprints') // cần sprints để tìm tên
             .lean();
 
