@@ -9,6 +9,21 @@ export async function createWorkspace(req, res) {
         if (!name) {
             return res.status(400).json({ success: false, message: 'Workspace name is required.' });
         }
+
+        // Check duplicate workspace names with the same owner
+        const normalizedName = name.trim().toLowerCase();
+        const existingWorkspace = await Workspace.findOne({
+            owner: req.user.id,
+            name: { $regex: new RegExp(`^${normalizedName}$`, "i") },
+        });
+
+        if (existingWorkspace) {
+            return res.status(400).json({
+                success: false,
+                message: "Workspace name must be unique for each owner.",
+            });
+        }
+
         const workspace = new Workspace({
             name,
             description,
@@ -116,7 +131,7 @@ export async function acceptInvite(req, res) {
         // Check user tồn tại chưa
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
-            return res.json({ success: true, message: "Redirect to Google login to complete invite", email });
+            return res.redirect(`${process.env.FRONTEND_URL}/login?inviteToken=${encodeURIComponent(token)}`);
         }
 
         // Add vào members nếu chưa có
@@ -126,7 +141,7 @@ export async function acceptInvite(req, res) {
             await workspace.save();
         }
 
-        return res.json({ success: true, message: "Joined workspace successfully" });
+        return res.redirect(`${process.env.FRONTEND_URL}/workspace/${workspaceId}`);
     } catch (error) {
         console.error(error);
         return res.status(400).json({ success: false, message: "Invalid or expired token" });
@@ -145,7 +160,24 @@ export async function updateWorkspace(req, res) {
         if (!isAdmin) {
             return res.status(403).json({ success: false, message: 'Only admins can update the workspace.' });
         }
-        if (name) workspace.name = name;
+
+        // Check duplicate workspace name when updating ws name
+        if (name && name.trim().toLowerCase() !== workspace.name.trim().toLowerCase()) {
+            const normalizedName = name.trim().toLowerCase();
+            const existingWorkspace = await Workspace.findOne({
+                owner: workspace.owner, 
+                name: { $regex: new RegExp(`^${normalizedName}$`, "i") },
+                _id: { $ne: workspaceId }, 
+            });
+            if (existingWorkspace) {
+                return res.status(400).json({
+                success: false,
+                message: "Workspace name must be unique for each owner.",
+                });
+            }
+            workspace.name = name.trim();
+        }
+
         if (description) workspace.description = description;
         await workspace.save();
         res.status(200).json({ success: true, workspace });
@@ -159,17 +191,36 @@ export async function removeMember(req, res) {
     try {
         const { workspaceId } = req.params;
         const { userId } = req.body;
+
         const workspace = await Workspace.findById(workspaceId);
         if (!workspace) {
             return res.status(404).json({ success: false, message: "Workspace not found." });
         }
-        const isAdmin = workspace.members.some(member => member.user.toString() === req.user.id && member.role === 'admin');
+
+        // Kiểm tra người thực hiện có phải admin không
+        const isAdmin = workspace.members.some(
+            member => member.user.toString() === req.user.id && member.role === 'admin'
+        );
         if (!isAdmin) {
             return res.status(403).json({ success: false, message: "Only admins can remove members." });
         }
+
+        // Ngăn không cho xóa owner
+        if (workspace.owner.toString() === userId) {
+            return res.status(403).json({ success: false, message: "Cannot remove the workspace owner." });
+        }
+
+        // Xóa member
+        const initialLength = workspace.members.length;
         workspace.members = workspace.members.filter(member => member.user.toString() !== userId);
+
+        if (workspace.members.length === initialLength) {
+            return res.status(404).json({ success: false, message: "Member not found in workspace." });
+        }
+
         await workspace.save();
         res.status(200).json({ success: true, message: "Member removed." });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ success: false, message: "Server error." });
@@ -180,20 +231,38 @@ export async function updateMemberRole(req, res) {
     try {
         const { workspaceId } = req.params;
         const { userId, role } = req.body;
+
         const workspace = await Workspace.findById(workspaceId);
         if (!workspace) {
             return res.status(404).json({ success: false, message: 'Workspace not found.' });
         }
-        const isAdmin = workspace.members.some(member => member.user.toString() === req.user.id && member.role === 'admin');
+
+        // Kiểm tra người thực hiện có phải admin không
+        const isAdmin = workspace.members.some(
+            member => member.user.toString() === req.user.id && member.role === 'admin'
+        );
         if (!isAdmin) {
             return res.status(403).json({ success: false, message: 'Only admins can update member roles.' });
         }
-        const member = workspace.members.find(member => member.user.toString() === userId);
+
+        // Tìm member cần cập nhật
+        const member = workspace.members.find(
+            member => member.user.toString() === userId
+        );
         if (!member) {
             return res.status(404).json({ success: false, message: 'Member not found in workspace.' });
         }
+
+        // Ngăn không cho đổi role nếu member là owner và admin
+        const isOwner = workspace.owner.toString() === userId;
+        if (member.role === 'admin' && isOwner) {
+            return res.status(403).json({ success: false, message: 'Cannot change role of the workspace owner.' });
+        }
+
+        // Cập nhật role
         member.role = role;
         await workspace.save();
+
         res.status(200).json({ success: true, message: 'Member role updated.' });
     } catch (error) {
         console.log(error);

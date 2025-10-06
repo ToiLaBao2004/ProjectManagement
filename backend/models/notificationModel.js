@@ -9,10 +9,9 @@ const notificationSchema = new mongoose.Schema({
     isRead: { type: Boolean, default: false }
 }, { timestamps: true });
 
-// Index để query nhanh theo user và ngày tạo
-notificationSchema.index({ user: 1, createdAt: -1 });
+// Index để query nhanh theo user
 notificationSchema.index({ user: 1, isRead: 1 });
 
-const NotificationModel = mongoose.model.Notification || mongoose.model('Notification', notificationSchema);
+const NotificationModel = mongoose.models.Notification || mongoose.model('Notification', notificationSchema);
 
 export default NotificationModel;

@@ -1,0 +1,89 @@
+[
+  {
+    "type": "schema",
+    "name": "workspaces",
+    "fields": {
+      "name": "String (required, unique)",
+      "description": "String",
+      "owner": "ObjectId (ref: User, required)",
+      "members": "Array of Member (subdocument)",
+      "createdAt": "Date (default: Date.now)",
+      "updatedAt": "Date (default: null, auto-update when modified)"
+    }
+  },
+  {
+    "type": "schema",
+    "name": "projects",
+    "fields": {
+      "workspace": "ObjectId (ref: Workspace, required)",
+      "name": "String (required)",
+      "description": "String",
+      "owner": "ObjectId (ref: User, required)",
+      "members": "Array of Member (subdocument)",
+      "sprints": "Array of Sprint (subdocument)",
+      "createdAt": "Date (default: Date.now)",
+      "updatedAt": "Date (default: null, auto-update when modified)"
+    }
+  },
+  {
+    "type": "sub-schema",
+    "name": "sprints",
+    "parent_collection": "projects",
+    "fields": {
+      "name": "String (unique, required)",
+      "startDate": "Date",
+      "endDate": "Date",
+      "createdAt": "Date (default: Date.now)",
+      "updatedAt": "Date (default: null, auto-update when modified)"
+    }
+  },
+  {
+    "type": "sub-schema",
+    "name": "member",
+    "parent_collection": ["projects", "workspaces"],
+    "fields": {
+      "user": "ObjectId (ref: User, required)",
+      "role": "String (enum: admin, member, default: member)",
+      "joinedAt": "Date (default: Date.now)"
+    }
+  },
+  {
+    "type": "schema",
+    "name": "tasks",
+    "fields": {
+      "project": "ObjectId (ref: Project, required)",
+      "sprint": "ObjectId (ref: Sprint)",
+      "title": "String (required)",
+      "description": "String",
+      "priority": "String (enum: low, medium, high, default: medium)",
+      "status": "String (enum: pending, in-progress, completed, default: pending)",
+      "dueDate": "Date",
+      "owner": "ObjectId (ref: User, required)",
+      "assignee": "ObjectId (ref: User, required)",
+      "completed": "Boolean (default: false)",
+      "comments": "Array of Comment (subdocument)",
+      "createdAt": "Date (default: Date.now)",
+      "updatedAt": "Date (default: null, update when modified)"
+    }
+  },
+  {
+    "type": "sub-schema",
+    "name": "comments",
+    "parent_collection": "tasks",
+    "fields": {
+      "user": "ObjectId (ref: User, required)",
+      "content": "String (required)",
+      "createdAt": "Date (default: Date.now)",
+      "updatedAt": "Date (default: null, auto-update when modified)"
+    }
+  },
+  {
+    "type": "schema",
+    "name": "users",
+    "fields": {
+      "name": "String (required)",
+      "email": "String (required)",
+      "password": "String (required)"
+    }
+  }
+]

@@ -10,10 +10,6 @@
           "hackoladeMeta": {},
           "isActivated": true,
           "type": "objectId",
-          "error": {
-            "name": false,
-            "code": false
-          },
           "GUID": "b3c0fe9d-955a-425c-874a-734cd5e6c3fb",
           "childRelationships": [
             "cf758ad3-41cc-4e46-8564-5b4b05bb7071",
@@ -22,8 +18,11 @@
             "ae1e3727-f09e-4d98-8b8b-b01605c60e3a",
             "f7932fca-aff2-4b0f-80d0-e73d77bc4e38",
             "0177e2fb-01f9-435c-a64c-d124dbd6d8f5",
-            "407475a7-dbd9-473c-a56a-669d290afa57"
-          ]
+            "407475a7-dbd9-473c-a56a-669d290afa57",
+            "78913d6f-8111-4528-a875-21996e1ec224"
+          ],
+          "primaryKey": true,
+          "error": {}
         },
         {
           "name": "name",
@@ -90,14 +89,13 @@
           "hackoladeMeta": {},
           "isActivated": true,
           "type": "objectId",
-          "error": {
-            "name": false,
-            "code": false
-          },
+          "primaryKey": true,
+          "required": false,
           "GUID": "49b9aba5-6513-40d9-89c6-ea86d86e67c5",
           "childRelationships": [
             "8d32ef31-4277-454d-9f45-9a6f9d112baa"
-          ]
+          ],
+          "error": {}
         },
         {
           "name": "name",
@@ -233,14 +231,12 @@
           "hackoladeMeta": {},
           "isActivated": true,
           "type": "objectId",
-          "error": {
-            "name": false,
-            "code": false
-          },
           "GUID": "1e3e9897-067f-4201-8873-b4aee4eb99a7",
           "childRelationships": [
             "431abc31-45c6-4a42-9b5f-f776ee78c4d4"
-          ]
+          ],
+          "primaryKey": true,
+          "error": {}
         },
         {
           "name": "workspace",
@@ -341,11 +337,37 @@
           "type": "document",
           "properties": [
             {
+              "name": "_id",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "objectId",
+              "GUID": "232645d9-d62a-4033-a1ef-6cac11a3c65f",
+              "error": {}
+            },
+            {
               "name": "name",
               "hackoladeMeta": {},
               "isActivated": true,
               "type": "string",
               "GUID": "d6fd0ad4-8c8c-4d1d-b96b-1483db1884d6",
+              "error": {}
+            },
+            {
+              "name": "startDate",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "date",
+              "primaryKey": false,
+              "GUID": "0eda339f-e970-4850-aea0-10f276ae771e",
+              "error": {}
+            },
+            {
+              "name": "endDate",
+              "hackoladeMeta": {},
+              "isActivated": true,
+              "type": "date",
+              "primaryKey": false,
+              "GUID": "fc27f859-dfc0-4dec-b99f-3265c24d12a9",
               "error": {}
             }
           ],
@@ -403,11 +425,12 @@
           "hackoladeMeta": {},
           "isActivated": true,
           "type": "objectId",
-          "error": {
-            "name": false,
-            "code": false
-          },
-          "GUID": "86587d99-8287-47a4-b4e5-ac664d5b18b5"
+          "GUID": "86587d99-8287-47a4-b4e5-ac664d5b18b5",
+          "primaryKey": true,
+          "error": {},
+          "childRelationships": [
+            "72dbffe4-8b8c-4fcd-ad80-6c9c7441262c"
+          ]
         },
         {
           "name": "project",
@@ -428,6 +451,14 @@
           "parentRelationship": "431abc31-45c6-4a42-9b5f-f776ee78c4d4"
         },
         {
+          "name": "sprint",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {},
+          "GUID": "3db0b991-dbc1-434c-9b0a-81de2f599304"
+        },
+        {
           "name": "title",
           "hackoladeMeta": {},
           "isActivated": true,
@@ -437,6 +468,14 @@
             "name": false,
             "code": false
           }
+        },
+        {
+          "name": "description",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "b922d8e4-734d-4b7a-96f6-2172e2a02553",
+          "error": {}
         },
         {
           "name": "priority",
@@ -492,14 +531,6 @@
             "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
           ],
           "parentRelationship": "0177e2fb-01f9-435c-a64c-d124dbd6d8f5"
-        },
-        {
-          "name": "complete",
-          "hackoladeMeta": {},
-          "isActivated": true,
-          "type": "boolean",
-          "error": {},
-          "GUID": "3fabf553-c890-4851-962b-9fca999856b4"
         },
         {
           "name": "comments",
@@ -636,6 +667,122 @@
       "hackoladeMeta": {
         "validationErrors": {}
       }
+    },
+    {
+      "collectionName": "Notification",
+      "type": "object",
+      "properties": [
+        {
+          "name": "_id",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "GUID": "de991be9-91b2-497a-9d06-01f56cea7ec3",
+          "primaryKey": true,
+          "error": {}
+        },
+        {
+          "name": "user",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {},
+          "GUID": "b41d78b7-d561-4984-9f81-01b017d3eda3",
+          "relationshipType": "Foreign Key",
+          "foreignCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "foreignField": [
+            "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+            "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+          ],
+          "parentRelationship": "78913d6f-8111-4528-a875-21996e1ec224"
+        },
+        {
+          "name": "type",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "bbba4f28-8d60-40e0-a3fe-8d118ba08999",
+          "error": {}
+        },
+        {
+          "name": "title",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "5cc080b5-63e9-4620-abed-4aa6a70b3411",
+          "error": {}
+        },
+        {
+          "name": "message",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "string",
+          "GUID": "9dd3d3a8-e566-4fba-ab3b-066ab44b619f",
+          "error": {}
+        },
+        {
+          "name": "task",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "objectId",
+          "error": {},
+          "GUID": "5548ff11-2d93-499e-b1c8-157e2ecfb978",
+          "relationshipType": "Foreign Key",
+          "foreignCollection": "52c8e696-a574-43a7-ae21-3a004659f598",
+          "foreignField": [
+            "52c8e696-a574-43a7-ae21-3a004659f598",
+            "86587d99-8287-47a4-b4e5-ac664d5b18b5"
+          ],
+          "parentRelationship": "72dbffe4-8b8c-4fcd-ad80-6c9c7441262c"
+        },
+        {
+          "name": "isRead",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "boolean",
+          "error": {},
+          "GUID": "de33ec36-45cc-49c2-9c6c-caad554d1c02"
+        },
+        {
+          "name": "createdAt",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {},
+          "GUID": "9b42b80b-73e7-4412-b0fb-8119ac4801e5"
+        },
+        {
+          "name": "updatedAt",
+          "hackoladeMeta": {},
+          "isActivated": true,
+          "type": "date",
+          "primaryKey": false,
+          "error": {},
+          "GUID": "2fc442ec-f632-4e19-8b95-6bb044747b01"
+        }
+      ],
+      "definitions": {
+        "type": "definitions",
+        "properties": [],
+        "GUID": "1ca7d658-5942-4107-bb6e-0780fb2e7a00"
+      },
+      "isActivated": true,
+      "additionalProperties": false,
+      "validationLevel": "Off",
+      "validationAction": "Warn",
+      "storageEngineName": "WiredTiger",
+      "collectionUsers": [],
+      "indexes": [],
+      "collation": {},
+      "sharding": {
+        "unique": true,
+        "collation": "null"
+      },
+      "GUID": "f0707859-d21e-4c33-8fae-16899834429f",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      }
     }
   ],
   "buckets": [],
@@ -674,20 +821,20 @@
         "dataType": "",
         "shape": [
           {
-            "x": 1081.7333333333333,
-            "y": 934.5999999999983
+            "x": 1044.4,
+            "y": 1866.5999999999983
           },
           {
-            "x": 1081.7333333333333,
-            "y": 892.4666666666658
+            "x": 1044.4,
+            "y": 1815.6666666666674
           },
           {
-            "x": 1081.6666666666665,
-            "y": 892.4666666666658
+            "x": 1044.166666666667,
+            "y": 1815.6666666666674
           },
           {
-            "x": 1081.6666666666665,
-            "y": 850.3333333333331
+            "x": 1044.166666666667,
+            "y": 1764.7333333333365
           }
         ],
         "sides": [
@@ -723,27 +870,19 @@
       },
       "hackoladeStyles": {
         "GUID": "a81739fd-8db2-41d4-9983-56d68ccc1efc",
-        "autoPositioning": true,
+        "autoPositioning": false,
         "type": "Orthogonal",
         "thickness": 2,
         "color": "#79c4ff",
         "dataType": "",
         "shape": [
           {
-            "x": 987.0666666666666,
-            "y": 934.5999999999983
+            "x": 997.0666666666666,
+            "y": 1866.5999999999983
           },
           {
-            "x": 987.0666666666666,
-            "y": 892.4666666666658
-          },
-          {
-            "x": 1011.9999999999999,
-            "y": 892.4666666666658
-          },
-          {
-            "x": 1011.9999999999999,
-            "y": 850.3333333333331
+            "x": 997.0666666666666,
+            "y": 1764.7333333333365
           }
         ],
         "sides": [
@@ -778,31 +917,27 @@
       },
       "hackoladeStyles": {
         "GUID": "90ccf538-e59c-4131-9d97-a5ecae278387",
-        "autoPositioning": true,
+        "autoPositioning": false,
         "type": "Orthogonal",
         "thickness": 2,
         "color": "#79c4ff",
         "dataType": "",
         "shape": [
           {
-            "x": 1353.3333333333312,
-            "y": 875.4666829427063
+            "x": 1478.5333333333324,
+            "y": 1849.600016276037
           },
           {
-            "x": 1264.8666666666657,
-            "y": 875.4666829427063
+            "x": 1478.5333333333324,
+            "y": 1974.5999999999983
           },
           {
-            "x": 1264.8666666666657,
-            "y": 1042.5999999999983
-          },
-          {
-            "x": 1176.4,
-            "y": 1042.5999999999983
+            "x": 1186.4,
+            "y": 1974.5999999999983
           }
         ],
         "sides": [
-          "left",
+          "bottom",
           "right"
         ]
       }
@@ -840,20 +975,20 @@
         "dataType": "",
         "shape": [
           {
-            "x": 1353.3333333333312,
-            "y": 765.8666829427062
+            "x": 1342.666666666665,
+            "y": 1658.800016276037
           },
           {
-            "x": 1252.3333333333321,
-            "y": 765.8666829427062
+            "x": 1245.666666666666,
+            "y": 1658.800016276037
           },
           {
-            "x": 1252.3333333333321,
-            "y": 766.3333333333331
+            "x": 1245.666666666666,
+            "y": 1680.7333333333365
           },
           {
-            "x": 1151.3333333333333,
-            "y": 766.3333333333331
+            "x": 1148.666666666667,
+            "y": 1680.7333333333365
           }
         ],
         "sides": [
@@ -889,27 +1024,19 @@
       },
       "hackoladeStyles": {
         "GUID": "f38d6c74-7078-4ecb-9d0a-7593fe47f975",
-        "autoPositioning": true,
+        "autoPositioning": false,
         "type": "Orthogonal",
         "thickness": 2,
         "color": "#79c4ff",
         "dataType": "",
         "shape": [
           {
-            "x": 1353.3333333333312,
-            "y": 820.6666829427062
+            "x": 1342.666666666665,
+            "y": 1722.400016276037
           },
           {
-            "x": 1252.3333333333321,
-            "y": 820.6666829427062
-          },
-          {
-            "x": 1252.3333333333321,
-            "y": 808.3333333333331
-          },
-          {
-            "x": 1151.3333333333333,
-            "y": 808.3333333333331
+            "x": 1148.666666666667,
+            "y": 1722.400016276037
           }
         ],
         "sides": [
@@ -944,32 +1071,28 @@
       },
       "hackoladeStyles": {
         "GUID": "2d825c80-0ec7-421d-a355-df338e1b31c4",
-        "autoPositioning": true,
+        "autoPositioning": false,
         "type": "Orthogonal",
         "thickness": 2,
         "color": "#79c4ff",
         "dataType": "",
         "shape": [
           {
-            "x": 1242.9999999999995,
-            "y": 387.66666666666765
+            "x": 1227.9999999999995,
+            "y": 1306.9666659037282
           },
           {
-            "x": 1298.1666666666654,
-            "y": 387.66666666666765
+            "x": 1477.666666666665,
+            "y": 1306.9666659037282
           },
           {
-            "x": 1298.1666666666654,
-            "y": 711.0666829427062
-          },
-          {
-            "x": 1353.3333333333312,
-            "y": 711.0666829427062
+            "x": 1477.666666666665,
+            "y": 1531.600016276037
           }
         ],
         "sides": [
           "right",
-          "left"
+          "top"
         ]
       }
     },
@@ -1006,20 +1129,20 @@
         "dataType": "",
         "shape": [
           {
-            "x": 1165.2499999999995,
-            "y": 596.6666666666677
+            "x": 1149.2499999999995,
+            "y": 1524.4666659037282
           },
           {
-            "x": 1165.2499999999995,
-            "y": 660.5000000000005
+            "x": 1149.2499999999995,
+            "y": 1581.5999996185324
           },
           {
-            "x": 1099.0833333333333,
-            "y": 660.5000000000005
+            "x": 1096.416666666667,
+            "y": 1581.5999996185324
           },
           {
-            "x": 1099.0833333333333,
-            "y": 724.3333333333331
+            "x": 1096.416666666667,
+            "y": 1638.7333333333365
           }
         ],
         "sides": [
@@ -1061,20 +1184,20 @@
         "dataType": "",
         "shape": [
           {
-            "x": 1009.7499999999994,
-            "y": 596.6666666666677
+            "x": 991.7499999999994,
+            "y": 1524.4666659037282
           },
           {
-            "x": 1009.7499999999994,
-            "y": 660.5000000000005
+            "x": 991.7499999999994,
+            "y": 1581.5999996185324
           },
           {
-            "x": 994.5833333333333,
-            "y": 660.5000000000005
+            "x": 991.916666666667,
+            "y": 1581.5999996185324
           },
           {
-            "x": 994.5833333333333,
-            "y": 724.3333333333331
+            "x": 991.916666666667,
+            "y": 1638.7333333333365
           }
         ],
         "sides": [
@@ -1117,25 +1240,123 @@
         "dataType": "",
         "shape": [
           {
-            "x": 1087.4999999999995,
-            "y": 596.6666666666677
+            "x": 1070.4999999999995,
+            "y": 1524.4666659037282
           },
           {
-            "x": 1087.4999999999995,
-            "y": 660.5000000000005
+            "x": 1070.4999999999995,
+            "y": 1581.5999996185324
           },
           {
-            "x": 1046.8333333333333,
-            "y": 660.5000000000005
+            "x": 1044.166666666667,
+            "y": 1581.5999996185324
           },
           {
-            "x": 1046.8333333333333,
-            "y": 724.3333333333331
+            "x": 1044.166666666667,
+            "y": 1638.7333333333365
           }
         ],
         "sides": [
           "bottom",
           "top"
+        ]
+      }
+    },
+    {
+      "name": "fk_Users._id_to_Notification.user",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+          "b3c0fe9d-955a-425c-874a-734cd5e6c3fb"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "f0707859-d21e-4c33-8fae-16899834429f",
+          "b41d78b7-d561-4984-9f81-01b017d3eda3"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
+      "childCollection": "f0707859-d21e-4c33-8fae-16899834429f",
+      "GUID": "78913d6f-8111-4528-a875-21996e1ec224",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "965a4064-2947-4975-b13c-e94975ff4c29",
+        "autoPositioning": false,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 816.7333170572932,
+            "y": 1678.000000000001
+          },
+          {
+            "x": 939.666666666667,
+            "y": 1678.000000000001
+          }
+        ],
+        "sides": [
+          "right",
+          "left"
+        ]
+      }
+    },
+    {
+      "name": "fk_Tasks._id_to_Notification.task",
+      "relationshipType": "Foreign Key",
+      "parentField": [
+        [
+          "52c8e696-a574-43a7-ae21-3a004659f598",
+          "86587d99-8287-47a4-b4e5-ac664d5b18b5"
+        ]
+      ],
+      "parentCardinality": "1",
+      "childField": [
+        [
+          "f0707859-d21e-4c33-8fae-16899834429f",
+          "5548ff11-2d93-499e-b1c8-157e2ecfb978"
+        ]
+      ],
+      "isActivated": true,
+      "childCardinality": "0..n",
+      "parentCollection": "52c8e696-a574-43a7-ae21-3a004659f598",
+      "childCollection": "f0707859-d21e-4c33-8fae-16899834429f",
+      "GUID": "72dbffe4-8b8c-4fcd-ad80-6c9c7441262c",
+      "hackoladeMeta": {
+        "validationErrors": {}
+      },
+      "hackoladeStyles": {
+        "GUID": "223ed32e-f418-482a-8b1d-e3f028e62e2e",
+        "autoPositioning": false,
+        "type": "Orthogonal",
+        "thickness": 2,
+        "color": "#79c4ff",
+        "dataType": "",
+        "shape": [
+          {
+            "x": 718.8666585286463,
+            "y": 1544.6666666666677
+          },
+          {
+            "x": 718.8666585286463,
+            "y": 1306.9666659037282
+          },
+          {
+            "x": 912.9999999999994,
+            "y": 1306.9666659037282
+          }
+        ],
+        "sides": [
+          "top",
+          "left"
         ]
       }
     }
@@ -1206,7 +1427,6 @@
     "f7932fca-aff2-4b0f-80d0-e73d77bc4e38": "fk_Users._id_to_Tasks.owner",
     "b1326029-0db8-4b56-ba4e-48ae90b336d7": "assigner",
     "0177e2fb-01f9-435c-a64c-d124dbd6d8f5": "fk_Users._id_to_Tasks.assigner",
-    "3fabf553-c890-4851-962b-9fca999856b4": "complete",
     "c67c0610-1342-43e6-9646-7d334cba736c": "comments",
     "fd463b1c-a84a-4557-8208-529542639392": "history",
     "5fc3ddd1-93bf-4570-824f-c69a32a171b6": "user",
@@ -1220,7 +1440,24 @@
     "fcd5b509-18cf-4136-94c9-5ed74c0d610b": "updatedBy",
     "407475a7-dbd9-473c-a56a-669d290afa57": "fk_Users._id_to_Tasks.history.updatedBy",
     "f9af86c2-09b9-409f-923e-f1cd4d882451": "updatedAt",
-    "75c8d4cf-85d3-4c61-ada9-39f1c1633961": "cc"
+    "75c8d4cf-85d3-4c61-ada9-39f1c1633961": "cc",
+    "232645d9-d62a-4033-a1ef-6cac11a3c65f": "_id",
+    "0eda339f-e970-4850-aea0-10f276ae771e": "startDate",
+    "fc27f859-dfc0-4dec-b99f-3265c24d12a9": "endDate",
+    "3db0b991-dbc1-434c-9b0a-81de2f599304": "sprint",
+    "b922d8e4-734d-4b7a-96f6-2172e2a02553": "description",
+    "f0707859-d21e-4c33-8fae-16899834429f": "Notification",
+    "de991be9-91b2-497a-9d06-01f56cea7ec3": "_id",
+    "b41d78b7-d561-4984-9f81-01b017d3eda3": "user",
+    "bbba4f28-8d60-40e0-a3fe-8d118ba08999": "type",
+    "78913d6f-8111-4528-a875-21996e1ec224": "fk_Users._id_to_Notification.user",
+    "5cc080b5-63e9-4620-abed-4aa6a70b3411": "title",
+    "9dd3d3a8-e566-4fba-ab3b-066ab44b619f": "message",
+    "5548ff11-2d93-499e-b1c8-157e2ecfb978": "task",
+    "72dbffe4-8b8c-4fcd-ad80-6c9c7441262c": "fk_Tasks._id_to_Notification.task",
+    "de33ec36-45cc-49c2-9c6c-caad554d1c02": "isRead",
+    "9b42b80b-73e7-4412-b0fb-8119ac4801e5": "createdAt",
+    "2fc442ec-f632-4e19-8b95-6bb044747b01": "updatedAt"
   },
   "definitions": {
     "type": "definitions",
@@ -1245,7 +1482,7 @@
   "creationTS": "2025-09-17T13:01:45.776Z",
   "GUID": "52e720b4-cc0d-4cf6-94c3-fd684d640326",
   "isLineageEnabled": false,
-  "lastModifTS": "2025-09-18T02:47:02.259Z",
+  "lastModifTS": "2025-09-25T03:52:47.765Z",
   "persistenceSchemaVersion": "8",
   "isCreatedByPlugin": true,
   "pluginInformation": {
@@ -1261,34 +1498,42 @@
         "erd": [
           {
             "GUID": "e0d741a8-d946-446b-887c-330a5f6c8c4e",
-            "x": 942.3333333333333,
-            "y": 724.3333333333331,
+            "x": 939.666666666667,
+            "y": 1638.7333333333365,
             "width": 209,
             "height": 126,
             "color": {}
           },
           {
             "GUID": "07d474d0-45c3-4e06-a196-2aa5e069d192",
-            "x": 892.4,
-            "y": 934.5999999999983,
+            "x": 902.4,
+            "y": 1866.5999999999983,
             "width": 284,
             "height": 216,
             "color": {}
           },
           {
             "GUID": "6df9155a-d808-4af1-abb4-590ce2d6ff22",
-            "x": 1353.3333333333312,
-            "y": 656.2666829427062,
-            "width": 271,
-            "height": 274,
+            "x": 1342.666666666665,
+            "y": 1531.600016276037,
+            "width": 269,
+            "height": 318,
             "color": {}
           },
           {
             "GUID": "52c8e696-a574-43a7-ae21-3a004659f598",
-            "x": 931.9999999999994,
-            "y": 178.66666666666765,
-            "width": 311,
-            "height": 418,
+            "x": 912.9999999999994,
+            "y": 1089.4666659037282,
+            "width": 315,
+            "height": 435,
+            "color": {}
+          },
+          {
+            "GUID": "f0707859-d21e-4c33-8fae-16899834429f",
+            "x": 630.7333170572932,
+            "y": 1544.6666666666677,
+            "width": 186,
+            "height": 200,
             "color": {}
           }
         ],
@@ -1612,6 +1857,11 @@
             "autoWidth": false,
             "autoHeight": false,
             "GUID": "52c8e696-a574-43a7-ae21-3a004659f598"
+          },
+          {
+            "autoWidth": false,
+            "autoHeight": false,
+            "GUID": "f0707859-d21e-4c33-8fae-16899834429f"
           }
         ],
         "relationshipUpdateDisabled": false
