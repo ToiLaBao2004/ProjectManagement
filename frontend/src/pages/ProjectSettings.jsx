@@ -290,8 +290,8 @@ const ProjectSettings = () => {
     };
 
     // Initiate remove sprint confirmation
-    const handleRemoveSprint = (name) => {
-        setRemoveSprintName(name);
+    const handleRemoveSprint = (sprintId) => {
+        setRemoveSprintName(sprintId);
         setIsRemoveSprintConfirmOpen(true);
     };
 
@@ -302,7 +302,7 @@ const ProjectSettings = () => {
             const token = localStorage.getItem('token');
             const res = await axios.put(
                 `${API_URL}/workspace/${workspaceId}/project/${projectId}/remove-sprint`,
-                { name: removeSprintName },
+                { sprintId: removeSprintName },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             setProject(res.data.project);
@@ -585,7 +585,7 @@ const ProjectSettings = () => {
 
                             <div className="space-y-2">
                                 {project.sprints.map((sprint) => (
-                                    <div key={sprint.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div key={sprint._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                         <div>
                                             <p className="text-sm font-medium text-gray-700">{sprint.name}</p>
                                             <p className="text-xs text-gray-500">
@@ -594,7 +594,7 @@ const ProjectSettings = () => {
                                             </p>
                                         </div>
                                         <button
-                                            onClick={() => handleRemoveSprint(sprint.name)}
+                                            onClick={() => handleRemoveSprint(sprint._id)}
                                             disabled={!isManagerOrOwner || loading}
                                             className="text-red-500 hover:text-red-600 disabled:text-red-300 transition-colors"
                                         >
