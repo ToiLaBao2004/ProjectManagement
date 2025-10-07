@@ -483,7 +483,7 @@ export async function deleteProject(req, res) {
         message: "Only project owner can delete this project.",
       });
     }
-    await Project.deleteOne();
+    await project.deleteOne();
 
     res
       .status(200)

@@ -362,7 +362,7 @@ export async function deleteTask(req, res) {
         }
 
         // Delete the task
-        await Task.deleteOne();
+        await task.deleteOne();
 
         res.status(200).json({ success: true, message: 'Task deleted successfully' });
     } catch (error) {
