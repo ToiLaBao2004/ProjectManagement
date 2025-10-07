@@ -99,7 +99,7 @@ def execute_query_node(state):
         pipeline=query["aggregate"]
         result=list(collection.aggregate(pipeline))
         
-        state.result=result
+        state.result=debug_state.convert_objectid(result)
         return state
     
     except PyMongoError as e:
