@@ -94,6 +94,7 @@ export async function getProjects(req, res) {
 export async function getProjectById(req, res) {
   try {
     const { projectId } = req.params;
+
     const project = await Project.findById(projectId)
       .populate("owner", "name email")
       .populate("members.user", "name email");
@@ -102,22 +103,26 @@ export async function getProjectById(req, res) {
         .status(404)
         .json({ success: false, message: "Project not found." });
     }
-    const workspace = await Workspace.findById(project.workspace);
-    const isMember = workspace.members.some(
-      (member) => member.user.toString() === req.user.id
-    );
+
+    const isMember =
+      project.owner._id.toString() === req.user.id ||
+      project.members.some(
+        (member) => member.user._id.toString() === req.user.id
+      );
     if (!isMember) {
       return res.status(403).json({
         success: false,
-        message: "Access denied. You are not a member of this workspace.",
+        message: "Access denied. You are not a member of this project.",
       });
     }
+    
     res.status(200).json({ success: true, project });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ success: false, message: "Server error." });
   }
 }
+
 
 export async function addMemberToProject(req, res) {
   try {
