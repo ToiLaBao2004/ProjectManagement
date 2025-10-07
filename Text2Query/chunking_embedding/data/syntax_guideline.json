@@ -234,5 +234,33 @@
     "metadata": {
       "languages": "en"
     }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "users",
+    "prompt": "Find users whose names contain 'Pong' and return only their names and email addresses.",
+    "query": {
+      "collection": "users",
+      "aggregate": [
+        {
+          "$match": {
+            "name": {
+              "$regex": "Phương",
+              "$options": "i"
+            }
+          }
+        },
+        {
+          "$project": {
+            "_id": 0,
+            "name": 1,
+            "email": 1
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
   }
 ]

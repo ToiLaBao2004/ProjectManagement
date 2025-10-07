@@ -29,7 +29,7 @@ def generate_query_node(state):
 
         Context (schema description): {state.context}
 
-        User question: {state.translated}
+        User question: {state.prompt}
 
         Task:
         - Generate a valid MongoDB query in JSON format to answer the user’s question.  
@@ -99,7 +99,7 @@ def execute_query_node(state):
         pipeline=query["aggregate"]
         result=list(collection.aggregate(pipeline))
         
-        state.result=result
+        state.result=debug_state.convert_objectid(result)
         return state
     
     except PyMongoError as e:
@@ -121,7 +121,7 @@ def handle_error_node(state):
     print(len(state.error))
     if state.error:
         fix_prompt = f"""
-            Prompt: {state.translated}
+            Prompt: {state.prompt}
             Error: {state.error}
             Context: {state.context}
 
