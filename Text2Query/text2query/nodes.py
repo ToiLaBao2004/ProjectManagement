@@ -1,6 +1,6 @@
 from text2query.services import services
 from pymongo.errors import PyMongoError
-from configs.constant import EXAMPLE_QUERY_JSON
+from configs.constant import EXAMPLE_QUERY_JSON,DATE_FORMAT
 from helper import clean_raw_query,store_history_chat
 from text2query.state import print_state
 import json
@@ -8,7 +8,6 @@ from helper import debug_state
  
 def translate_node(state):
     state.translated=services.translator.translate(state.prompt)
-    print(state.translated)
     return state
 
 def retrieve_node(state):
@@ -39,6 +38,8 @@ def generate_query_node(state):
             2. "aggregate": a list of aggregation stages (list of dicts, not a string).  
         - Do not include "db." or "collection.aggregate()" in the output.  
         - Do not explain or add extra text, only return the JSON query.
+        - When representing date values, use this JSON format:
+                {DATE_FORMAT}
         Example of query format:
         {EXAMPLE_QUERY_JSON}
         """
@@ -87,7 +88,7 @@ def validate_query_node(state):
             })
         state.is_error=True
     else:
-        state.query=query
+        state.query=clean_raw_query.parse_and_convert_query(query)
     return state
 
 def execute_query_node(state):
@@ -132,7 +133,9 @@ def handle_error_node(state):
                 2. "aggregate": a list of aggregation stages (list of dicts, not a string).
             - Do not include "db." or "collection.aggregate()" in the output.
             - Do not explain or add extra text, only return the JSON query.
-            Example of correct query format:
+            - When representing date values, use this JSON format:
+                {"__datetime__": "2025-10-08T00:00:00Z"}
+            Example of query format:
             {EXAMPLE_QUERY_JSON}
             """
         
@@ -151,7 +154,7 @@ def result_node(state):
     store_history_chat.add_chat(services.redis,
                                         state.session_id,
                                         state.prompt,
-                                        state.cleaned_raw_query)
+                                        state.result)
     
     print_state(state)
     return state
@@ -187,4 +190,5 @@ def rewrite_prompt_node(state):
 
 def error_node(state):
     state.result = [{"Error": "Pipeline đã đạt mức giới hạn thử lại, hãy mô tả rõ ràng hơn"}]
+    print_state(state)
     return state

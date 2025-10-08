@@ -7,8 +7,8 @@ from redis import Redis
 from helper.translate_model import Translator
 class Services:
     def __init__(self):
-        self.llm=ChatGoogleGenerativeAI(model=settings.model_registry["gemini"],
-                            api_key=settings.gemini_ai_api_key,
+        self.llm=ChatOpenAI(model=settings.model_registry["openai"],
+                            api_key=settings.open_ai_api_key,
                             temperature=0,
                             timeout=60)
         
