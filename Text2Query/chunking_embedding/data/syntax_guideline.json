@@ -262,5 +262,37 @@
     "metadata": {
       "languages": "en"
     }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "tasks",
+    "prompt": "How many tasks are in the Soctrip Travel project?",
+    "query": {
+      "collection": "tasks",
+      "aggregate": [
+        {
+          "$lookup": {
+            "from": "projects",
+            "localField": "project",
+            "foreignField": "_id",
+            "as": "projectInfo"
+          }
+        },
+        {
+          "$unwind": "$projectInfo"
+        },
+        {
+          "$match": {
+            "projectInfo.name": "Soctrip Travel"
+          }
+        },
+        {
+          "$count": "totalTasks"
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
   }
 ]
