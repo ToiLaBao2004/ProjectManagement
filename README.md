@@ -324,37 +324,39 @@ Run instructions (overview) — fill in details below:
    cd Text2Query
    ```
 
-2. Populate `Text2Query/.env` with the environment variables listed above.
+2. Download `models` folder into `Text2Query` directory: [https://drive.google.com/file/d/1Uj0OesVdY4v1vSDasYIl15PgvlAJm8Ny/view](https://drive.google.com/file/d/1Uj0OesVdY4v1vSDasYIl15PgvlAJm8Ny/view)
 
-3. Prepare chunking data (place JSON files into `Text2Query/chunking_embedding/data/`).
+3. Populate `Text2Query/.env` with the environment variables listed above.
 
-4. Run chunking to build embeddings and insert into MongoDB:
+4. Prepare chunking data (place JSON files into `Text2Query/chunking_embedding/data/`).
+
+5. Run chunking to build embeddings and insert into MongoDB:
 
    ```bash
    python chunking_embedding/chunking.py
    ```
 
-5. Install, open `Docker desktop` and run:
+6. Install, open `Docker desktop` and run:
 
    ```bash
    docker run -d --name llm-redis -p 6379:6379 redis:latest
    ```
 
-6. Download `Redis for VS Code` extension: [https://marketplace.visualstudio.com/items?itemName=Redis.redis-for-vscode](https://marketplace.visualstudio.com/items?itemName=Redis.redis-for-vscode)
+7. Download `Redis for VS Code` extension: [https://marketplace.visualstudio.com/items?itemName=Redis.redis-for-vscode](https://marketplace.visualstudio.com/items?itemName=Redis.redis-for-vscode)
 
-7. Click `R` icon in the sidebar and choose `+ Connect database`:
+8. Click `R` icon in the sidebar and choose `+ Connect database`:
    ![alt text](img/redis.png)
 
-8. Leave default setting and click `Add Redis Database`
+9. Leave default setting and click `Add Redis Database`
    ![alt text](img/redis-connect.png)
 
-9. Start the FastAPI server (development):
+10. Start the FastAPI server (development):
 
    ```bash
    uvicorn main:app --reload
    ```
 
-10. Call the endpoint from frontend or curl:
+11. Call the endpoint from frontend or curl:
 
     ```
     POST http://localhost:8000/text2query
