@@ -262,5 +262,145 @@
     "metadata": {
       "languages": "en"
     }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "users",
+    "prompt": "Find users whose names contain the string 'Pong', excluding their password and ID.",
+    "query": {
+      "collection": "users",
+      "aggregate": [
+        {
+          "$match": {
+            "name": {
+              "$regex": "Phương"
+            }
+          }
+        },
+        {
+          "$project": {
+            "_id": 0,
+            "password": 0
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "tasks",
+    "prompt": "Get the information of the tasks by project, just title, description, priority and status.",
+    "query": {
+      "collection": "tasks",
+      "aggregate": [
+        {
+          "$group": {
+            "_id": "$project",
+            "tasks": {
+              "$push": {
+                "title": "$title",
+                "description": "$description",
+                "priority": "$priority",
+                "status": "$status"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "users",
+    "prompt": "Retrieve the names and emails of users who do not have any tasks assigned in the Soctrip Travel project.",
+    "query": {
+      "collection": "users",
+      "aggregate": [
+        {
+          "$lookup": {
+            "from": "tasks",
+            "localField": "_id",
+            "foreignField": "assignee",
+            "as": "assignedTasks"
+          }
+        },
+        {
+          "$match": {
+            "assignedTasks": {
+              "$eq": []
+            }
+          }
+        },
+        {
+          "$lookup": {
+            "from": "tasks",
+            "localField": "_id",
+            "foreignField": "owner",
+            "as": "ownedTasks"
+          }
+        },
+        {
+          "$match": {
+            "ownedTasks": {
+              "$eq": []
+            }
+          }
+        },
+        {
+          "$project": {
+            "name": 1,
+            "email": 1
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "projects",
+    "prompt": "Find users who have participated in the Soctrip Travel project.",
+    "query": {
+      "collection": "projects",
+      "aggregate": [
+        {
+          "$match": {
+            "name": "Soctrip Travel"
+          }
+        },
+        {
+          "$unwind": "$members"
+        },
+        {
+          "$lookup": {
+            "from": "users",
+            "localField": "members.user",
+            "foreignField": "_id",
+            "as": "userDetails"
+          }
+        },
+        {
+          "$unwind": "$userDetails"
+        },
+        {
+          "$project": {
+            "userId": "$userDetails._id",
+            "userName": "$userDetails.name",
+            "userEmail": "$userDetails.email"
+          }
+        }
+      ]
+    },
+    "metadata": {
+      "languages": "en"
+    }
   }
 ]

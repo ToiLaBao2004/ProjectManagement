@@ -8,7 +8,6 @@ from helper import debug_state
  
 def translate_node(state):
     state.translated=services.translator.translate(state.prompt)
-    print(state.translated)
     return state
 
 def retrieve_node(state):
@@ -151,7 +150,7 @@ def result_node(state):
     store_history_chat.add_chat(services.redis,
                                         state.session_id,
                                         state.prompt,
-                                        state.cleaned_raw_query)
+                                        state.result)
     
     print_state(state)
     return state
