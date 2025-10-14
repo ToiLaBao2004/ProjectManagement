@@ -89,6 +89,7 @@ def validate_query_node(state):
         state.is_error=True
     else:
         state.query=clean_raw_query.parse_and_convert_query(query)
+        print(state.query)
     return state
 
 def execute_query_node(state):
@@ -134,7 +135,7 @@ def handle_error_node(state):
             - Do not include "db." or "collection.aggregate()" in the output.
             - Do not explain or add extra text, only return the JSON query.
             - When representing date values, use this JSON format:
-                {"__datetime__": "2025-10-08T00:00:00Z"}
+                {DATE_FORMAT}
             Example of query format:
             {EXAMPLE_QUERY_JSON}
             """

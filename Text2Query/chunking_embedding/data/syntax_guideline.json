@@ -434,5 +434,15 @@
     "metadata": {
       "languages": "en"
     }
-  }
-]
+  },
+  {
+    "chunk_type": "syntax_guideline",
+    "collection_name": "tasks",
+    "prompt": "Find all the task deadlines grouped by project, get information about the task name, task description and project name",
+    "query": {
+      "collection": "tasks",
+      "aggregate": [
+        {
+          "$match": {
+            "dueDate": {
+              "$lt": 
