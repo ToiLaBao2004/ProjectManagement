@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
-import { CheckCircle, Clock, AlertTriangle, Briefcase, FileText, Filter } from 'lucide-react';
+import { CheckCircle, AlertTriangle, Briefcase, FileText, Filter } from 'lucide-react';
 
 const API_URL = "http://localhost:4000";
 
 const SprintPage = () => {
     const navigate = useNavigate();
-    const { projectId, sprintId } = useParams(); // Lấy projectId và sprintId từ URL
+    const { projectId, sprintId } = useParams();
     const [tasks, setTasks] = useState([]);
-    const [sprintName, setSprintName] = useState(''); // Lưu tên sprint
+    const [sprintName, setSprintName] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [taskFilter, setTaskFilter] = useState('all'); // State cho bộ lọc trạng thái task
+    const [taskFilter, setTaskFilter] = useState('all');
 
-    // Fetch tasks theo sprint
-    // Fetch tasks theo sprint
+    // ✅ Phân trang
+    const [currentPage, setCurrentPage] = useState(1);
+    const tasksPerPage = 5;
+
     useEffect(() => {
         const fetchSprintTasks = async () => {
             setLoading(true);
@@ -31,7 +33,7 @@ const SprintPage = () => {
                     params: { projectId }
                 });
                 setTasks(res.data.tasks || []);
-                setSprintName(res.data.sprintName || 'Sprint'); // ✅ lấy sprintName từ API
+                setSprintName(res.data.sprintName || 'Sprint');
             } catch (err) {
                 console.error('Error fetching sprint tasks:', err);
                 setError(err.response?.data?.message || 'Failed to load tasks.');
@@ -47,16 +49,32 @@ const SprintPage = () => {
         fetchSprintTasks();
     }, [navigate, projectId, sprintId]);
 
-    // Thống kê
+    // Stats
     const pendingTasks = tasks.filter(task => task.status !== 'completed').length;
     const completedTasks = tasks.length - pendingTasks;
     const totalTasks = tasks.length;
     const highPriorityTasks = tasks.filter(task => task.priority === 'high').length;
 
-    // Lọc tasks dựa trên trạng thái
+    // Filtered tasks
     const filteredTasks = taskFilter === 'all'
         ? tasks
         : tasks.filter(task => task.status === taskFilter);
+
+    // ✅ Pagination logic
+    const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
+    const startIndex = (currentPage - 1) * tasksPerPage;
+    const endIndex = startIndex + tasksPerPage;
+    const currentTasks = filteredTasks.slice(startIndex, endIndex);
+
+    const handlePageChange = (pageNumber) => {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
+    };
+
+    useEffect(() => {
+        setCurrentPage(1); // Reset page khi đổi filter
+    }, [taskFilter]);
 
     if (loading) {
         return (
@@ -125,51 +143,86 @@ const SprintPage = () => {
                         </select>
                     </div>
                 </div>
-                {filteredTasks.length === 0 ? (
+
+                {currentTasks.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
                         <FileText className="w-12 h-12 mx-auto mb-2 text-gray-400" />
                         <p>No tasks found for this filter.</p>
                     </div>
                 ) : (
-                    <div className="space-y-4">
-                        {filteredTasks.map(task => (
-                            <div
-                                key={task._id}
-                                className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-                                onClick={() => navigate(`/task/${task._id}`)}
-                            >
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <h4 className="font-bold text-gray-900">{task.title}</h4>
-                                            <span
-                                                className={`px-2 py-1 text-xs rounded-full ${task.status === 'completed'
-                                                    ? 'bg-green-100 text-green-700'
-                                                    : 'bg-orange-100 text-orange-700'
-                                                    }`}
-                                            >
-                                                {task.status}
-                                            </span>
-                                        </div>
-                                        <p className="text-sm text-gray-600 mb-2">{task.description || 'No description'}</p>
-                                        <div className="flex items-center gap-4 text-xs text-gray-500 mb-2">
-                                            <span>Priority: {task.priority || 'Medium'}</span>
-                                            <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-xs text-gray-500">Project:</span>
-                                            <Link
-                                                to={`/workspace/${task.project?.workspace}/project/${task.project?._id}`}
-                                                className="text-xs text-blue-600 hover:text-blue-700 font-medium"
-                                            >
-                                                {task.project?.name || 'Unknown Project'}
-                                            </Link>
+                    <>
+                        <div className="space-y-4">
+                            {currentTasks.map(task => (
+                                <div
+                                    key={task._id}
+                                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                                    onClick={() => navigate(`/task/${task._id}`)}
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <h4 className="font-bold text-gray-900">{task.title}</h4>
+                                                <span
+                                                    className={`px-2 py-1 text-xs rounded-full ${task.status === 'completed'
+                                                        ? 'bg-green-100 text-green-700'
+                                                        : 'bg-orange-100 text-orange-700'
+                                                        }`}
+                                                >
+                                                    {task.status}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm text-gray-600 mb-2">{task.description || 'No description'}</p>
+                                            <div className="flex items-center gap-4 text-xs text-gray-500 mb-2">
+                                                <span>Priority: {task.priority || 'Medium'}</span>
+                                                <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-xs text-gray-500">Project:</span>
+                                                <Link
+                                                    to={`/workspace/${task.project?.workspace}/project/${task.project?._id}`}
+                                                    className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                                                >
+                                                    {task.project?.name || 'Unknown Project'}
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+
+                        {/* ✅ Pagination */}
+                        <div className="flex justify-center items-center mt-6 gap-2">
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="px-3 py-1 border rounded-lg text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                            >
+                                Previous
+                            </button>
+
+                            {[...Array(totalPages)].map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className={`px-3 py-1 border rounded-lg text-sm ${currentPage === index + 1
+                                            ? 'bg-blue-500 text-white'
+                                            : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className="px-3 py-1 border rounded-lg text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </>
                 )}
             </div>
         </div>

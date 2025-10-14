@@ -25,6 +25,8 @@ const ProjectPage = () => {
     const [deleteTaskId, setDeleteTaskId] = useState('');
     const [errorModal, setErrorModal] = useState({ open: false, message: '', type: '' });
     const [taskFilter, setTaskFilter] = useState('all'); // State for task status filter
+    const [currentPage, setCurrentPage] = useState(1); // State for current page
+    const tasksPerPage = 5; // Tasks per page
 
     // Fetch project, tasks, sprints
     useEffect(() => {
@@ -67,6 +69,11 @@ const ProjectPage = () => {
 
         fetchProjectData();
     }, [workspaceId, projectId, navigate]);
+
+    // Reset to page 1 when filter changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [taskFilter]);
 
     // Handle task created
     const handleTaskCreated = (newTask) => {
@@ -213,6 +220,18 @@ const ProjectPage = () => {
         ? tasks
         : tasks.filter(task => task.status === taskFilter);
 
+    // Pagination logic
+    const totalPages = Math.ceil(filteredTasks.length / tasksPerPage);
+    const startIndex = (currentPage - 1) * tasksPerPage;
+    const endIndex = startIndex + tasksPerPage;
+    const currentTasks = filteredTasks.slice(startIndex, endIndex);
+
+    const handlePageChange = (pageNumber) => {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center h-64">
@@ -320,55 +339,89 @@ const ProjectPage = () => {
                         </select>
                     </div>
                 </div>
-                {filteredTasks.length === 0 ? (
+                {currentTasks.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
                         <FileText className="w-12 h-12 mx-auto mb-2 text-gray-400" />
                         <p>No tasks found for this filter.</p>
                     </div>
                 ) : (
-                    <div className="space-y-4">
-                        {filteredTasks.map(task => (
-                            <div
-                                key={task._id}
-                                className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
-                            >
-                                <div className="flex items-start justify-between">
-                                    <div
-                                        className="flex-1 cursor-pointer"
-                                        onClick={() => navigate(`/task/${task._id}`)}
-                                    >
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <h4 className="font-bold text-gray-900">{task.title}</h4>
-                                            <span className={`px-2 py-1 text-xs rounded-full ${task.status === 'completed'
-                                                ? 'bg-green-100 text-green-700'
-                                                : 'bg-orange-100 text-orange-700'
-                                                }`}>
-                                                {task.status}
-                                            </span>
+                    <>
+                        <div className="space-y-4">
+                            {currentTasks.map(task => (
+                                <div
+                                    key={task._id}
+                                    className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <div
+                                            className="flex-1 cursor-pointer"
+                                            onClick={() => navigate(`/task/${task._id}`)}
+                                        >
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <h4 className="font-bold text-gray-900">{task.title}</h4>
+                                                <span className={`px-2 py-1 text-xs rounded-full ${task.status === 'completed'
+                                                    ? 'bg-green-100 text-green-700'
+                                                    : 'bg-orange-100 text-orange-700'
+                                                    }`}>
+                                                    {task.status}
+                                                </span>
+                                            </div>
+                                            <p className="text-sm text-gray-600 mb-2">{task.description || 'No description'}</p>
+                                            <div className="flex items-center gap-4 text-xs text-gray-500">
+                                                <span>Priority: {task.priority || 'Medium'}</span>
+                                                <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
+                                                <span>Assigned by: {task.owner?.name || 'Unknown'}</span>
+                                                <span>To: {task.assignee?.name || 'Unknown'}</span>
+                                                <span>Sprint: {task.sprint?.name || 'No sprint'}</span>
+                                            </div>
                                         </div>
-                                        <p className="text-sm text-gray-600 mb-2">{task.description || 'No description'}</p>
-                                        <div className="flex items-center gap-4 text-xs text-gray-500">
-                                            <span>Priority: {task.priority || 'Medium'}</span>
-                                            <span>Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
-                                            <span>Assigned by: {task.owner?.name || 'Unknown'}</span>
-                                            <span>To: {task.assignee?.name || 'Unknown'}</span>
-                                            <span>Sprint: {task.sprint?.name || 'No sprint'}</span>
-                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteTask(task._id);
+                                            }}
+                                            className="text-red-600 hover:text-red-800"
+                                            title="Delete Task"
+                                        >
+                                            <Trash2 className="w-5 h-5" />
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteTask(task._id);
-                                        }}
-                                        className="text-red-600 hover:text-red-800"
-                                        title="Delete Task"
-                                    >
-                                        <Trash2 className="w-5 h-5" />
-                                    </button>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+
+                        {/* Pagination */}
+                        <div className="flex justify-center items-center mt-6 gap-2">
+                            <button
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                                className="px-3 py-1 border rounded-lg text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                            >
+                                Previous
+                            </button>
+
+                            {[...Array(totalPages)].map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className={`px-3 py-1 border rounded-lg text-sm ${currentPage === index + 1
+                                            ? 'bg-blue-500 text-white'
+                                            : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+
+                            <button
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                                className="px-3 py-1 border rounded-lg text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </>
                 )}
             </div>
 

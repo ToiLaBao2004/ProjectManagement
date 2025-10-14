@@ -186,7 +186,7 @@ const Navbar = ({ user = {}, onLogout }) => {
                                                     markAllAsRead();
                                                     setNotificationOpen(false);
                                                 }}
-                                                className='text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors'
+                                                className='text-xs text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer'
                                             >
                                                 Mark all read
                                             </button>
