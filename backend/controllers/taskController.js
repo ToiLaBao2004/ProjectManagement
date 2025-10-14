@@ -90,7 +90,8 @@ export async function getTasksByProject(req, res) {
             .populate('owner', 'name email')
             .populate('assignee', 'name email')
             .populate('project', 'name workspace')
-            .lean(); // convert thành plain object để dễ merge
+            .lean() // convert thành plain object để dễ merge
+            .sort({ createdAt: -1 });
 
         // gắn sprint name vào mỗi task
         const tasksWithSprint = tasks.map(task => {
@@ -127,7 +128,8 @@ export async function getTaskByUserAssignee(req, res) {
             .populate('owner', 'name email')
             .populate('assignee', 'name email')
             .populate('project', 'name workspace')
-            .lean();
+            .lean()
+            .sort({ createdAt: -1 });
 
         const tasksWithSprint = tasks.map(task => {
             const sprintId = task.sprint?.toString();
@@ -384,7 +386,8 @@ export async function getTasksBySprint(req, res) {
             .populate('owner', 'name email')
             .populate('assignee', 'name email')
             .populate('project', 'name workspace sprints') // cần sprints để tìm tên
-            .lean();
+            .lean()
+            .sort({ createdAt: -1 });
 
         if (!tasks.length) {
             return res.status(200).json({ success: true, sprintName: null, tasks: [] });
